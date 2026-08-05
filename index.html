@@ -1,293 +1,596 @@
-<!DOCTYPE html>
-<html lang="fr" dir="ltr">
+<!DOCTYPE html><html lang="fr" dir="ltr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bulletin Scolaire Pro</title>
-<style>
-  :root{
-    --main:#1d4ed8; --dark:#0f172a; --bg:#f1f5f9; --card:#fff;
-    --border:#e2e8f0; --ok:#16a34a; --warn:#d97706; --bad:#dc2626;
-  }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  body{font-family:'Segoe UI', Tahoma, Arial, sans-serif; background:var(--bg); color:var(--dark); padding-bottom:60px;}
-  body.ar{font-family:'Tahoma','Segoe UI',Arial,sans-serif;}
-  header{background:linear-gradient(135deg,var(--main),#2563eb); color:#fff; padding:18px 16px; display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between;}
-  header h1{font-size:1.2rem;}
-  .lang-btn{background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.4); color:#fff; padding:8px 14px; border-radius:8px; cursor:pointer; font-size:.9rem;}
-  .lang-btn:hover{background:rgba(255,255,255,.28);}
-  .container{max-width:760px; margin:0 auto; padding:16px;}
-  .card{background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px; margin-bottom:16px; box-shadow:0 1px 3px rgba(0,0,0,.05);}
-  .card h2{font-size:1rem; color:var(--main); margin-bottom:12px;}
-  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
-  label{display:block; font-size:.8rem; color:#64748b; margin-bottom:4px;}
-  input, select{width:100%; padding:9px 10px; border:1px solid var(--border); border-radius:8px; font-size:.95rem;}
-  input:focus, select:focus{outline:2px solid var(--main); outline-offset:-1px;}
-  table{width:100%; border-collapse:collapse; font-size:.9rem;}
-  th, td{padding:8px; border-bottom:1px solid var(--border); text-align:left;}
-  th{background:#eff6ff; color:var(--main); font-weight:600;}
-  body.ar th, body.ar td{text-align:right;}
-  .del{background:none; border:none; color:var(--bad); font-size:1.1rem; cursor:pointer;}
-  .btn{display:inline-block; background:var(--main); color:#fff; border:none; padding:11px 18px; border-radius:8px; cursor:pointer; font-size:.95rem; margin:4px 6px 4px 0;}
-  .btn.secondary{background:#fff; color:var(--main); border:1px solid var(--main);}
-  .btn:hover{filter:brightness(1.1);}
-  .results{background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:14px; margin-top:14px; display:flex; flex-wrap:wrap; gap:14px; font-size:1.05rem;}
-  .results .big{font-size:1.6rem; font-weight:700; color:var(--main);}
-  .mention{font-weight:700; padding:2px 10px; border-radius:999px;}
-  .mention.tb{background:#dcfce7; color:#166534;}
-  .mention.b{background:#dbeafe; color:#1e40af;}
-  .mention.ab{background:#fef9c3; color:#854d0e;}
-  .mention.p{background:#ffedd5; color:#9a3412;}
-  .mention.i{background:#fee2e2; color:#991b1b;}
-  .footer{text-align:center; color:#94a3b8; font-size:.75rem; margin-top:20px;}
-  .summary{padding:12px; border:1px solid var(--border); border-radius:10px; background:#f8fafc; margin-top:10px; font-size:.95rem; white-space:pre-line;}
-  @media print{
-    header, .no-print, .btn, .lang-btn{display:none !important;}
-    body{background:#fff; padding:0;}
-    .card{box-shadow:none; border:none; padding:6px;}
-    .summary{white-space:normal; font-size:.9rem;}
-    .container{max-width:100%;}
-    .results{background:#fff; border:1px solid #ccc;}
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bulletin Scolaire Pro - GIMI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --navy: #1a2a3a;
+      --gold: #c5a059;
+      --light-bg: #f4f6f9;
+      --border: #e2e8f0;
+      --text: #334155;
+    }
+
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', 'Tajawal', sans-serif;
+    }
+
+
+    body {
+      background-color: var(--light-bg);
+      color: var(--text);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+
+    .toolbar {
+      width: 100%;
+      max-width: 850px;
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+
+    button {
+      background-color: var(--navy);
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: opacity 0.2s;
+    }
+
+
+    button:hover { opacity: 0.9; }
+    button.secondary { background-color: var(--gold); }
+    button.danger { background-color: #e11d48; }
+
+
+    .report-card {
+      background: white;
+      width: 100%;
+      max-width: 850px;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+      border-top: 6px solid var(--navy);
+    }
+
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 20px;
+      margin-bottom: 25px;
+    }
+
+
+    .logo-container {
+      width: 90px;
+      height: 90px;
+      border: 2px dashed var(--border);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      overflow: hidden;
+      background-color: #f8fafc;
+      color: #94a3b8;
+    }
+
+
+    .logo-container svg { width: 32px; height: 32px; fill: currentColor; }
+    .logo-container img { width: 100%; height: 100%; object-fit: contain; }
+
+
+    .school-info { text-align: right; }
+    html[dir="rtl"] .school-info { text-align: left; }
+
+
+    .school-info input, .school-info select {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--navy);
+      border: none;
+      border-bottom: 1px dashed transparent;
+      background: transparent;
+    }
+    .school-info input:focus, .school-info select:focus { border-bottom-color: var(--gold); outline: none; }
+
+
+    .meta-row {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      align-items: center;
+      margin-top: 5px;
+    }
+    html[dir="rtl"] .meta-row { justify-content: flex-start; }
+    .meta-row input, .meta-row select { font-size: 0.85rem !important; color: #64748b !important; font-weight: 500 !important; }
+
+
+    .student-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 25px;
+      background-color: #f8fafc;
+      padding: 15px;
+      border-radius: 6px;
+    }
+
+
+    .field { display: flex; flex-direction: column; }
+    .field label { font-size: 0.8rem; text-transform: uppercase; color: #64748b; margin-bottom: 4px; font-weight: 600; }
+    .field input { padding: 6px 10px; border: 1px solid var(--border); border-radius: 4px; }
+
+
+    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    th, td { border: 1px solid var(--border); padding: 10px; text-align: center; }
+    th { background-color: var(--navy); color: white; font-weight: 600; }
+    td input { width: 100%; text-align: center; border: 1px solid transparent; padding: 4px; }
+    td input:focus { border-color: var(--gold); outline: none; }
+    .subject-name { text-align: start; font-weight: 500; }
+
+
+    .summary-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: var(--navy);
+      color: white;
+      padding: 15px 20px;
+      border-radius: 6px;
+      margin-top: 20px;
+    }
+
+
+    .summary-item { display: flex; flex-direction: column; }
+    .summary-item span:first-child { font-size: 0.8rem; opacity: 0.8; }
+    .summary-item span:last-child { font-size: 1.3rem; font-weight: 700; color: var(--gold); }
+
+
+    .auto-appreciation {
+      margin-top: 15px;
+      padding: 10px 15px;
+      background-color: #f1f5f9;
+      border-left: 4px solid var(--gold);
+      border-radius: 4px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--navy);
+    }
+    html[dir="rtl"] .auto-appreciation { border-left: none; border-right: 4px solid var(--gold); }
+
+
+    .obs-section { margin-top: 20px; display: flex; flex-direction: column; }
+    .obs-section label { font-size: 0.85rem; font-weight: 600; color: var(--navy); margin-bottom: 5px; }
+    .obs-section textarea { width: 100%; height: 70px; padding: 10px; border: 1px solid var(--border); border-radius: 6px; resize: vertical; font-size: 0.9rem; }
+
+
+    .signatures-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 35px;
+      text-align: center;
+    }
+
+
+    .signature-box {
+      border: 1px dashed var(--border);
+      padding: 15px;
+      border-radius: 6px;
+      min-height: 90px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .signature-box span { font-size: 0.85rem; font-weight: 600; color: var(--navy); }
+
+
+    .footer-signature {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #94a3b8;
+      border-top: 1px solid var(--border);
+      padding-top: 15px;
+    }
+
+
+    @media print {
+      body { background: white; padding: 0; }
+      .toolbar, .btn-action, th:last-child, td:last-child { display: none !important; }
+      .report-card { box-shadow: none; border-top: none; padding: 0; width: 100%; }
+      input, select, textarea { border: none !important; background: transparent !important; appearance: none; }
+      .signature-box { border: 1px solid #cbd5e1; }
+    }
+  </style>
 </head>
 <body>
-<header>
-  <h1 id="appTitle">📄 Bulletin Scolaire Pro</h1>
-  <div>
-    <button class="lang-btn" id="langBtn" onclick="toggleLang()">العربية</button>
+
+
+  <div class="toolbar">
+    <button onclick="toggleLang()" class="secondary" id="lang-btn">العربية</button>
+    <button onclick="addSubject()" class="btn-action" id="add-btn">+ Ajouter Matière</button>
+    <button onclick="fillDemo()" class="btn-action" id="demo-btn">Remplir Démo</button>
+    <button onclick="resetForm()" class="danger btn-action" id="reset-btn">Réinitialiser</button>
+    <button onclick="window.print()" class="btn-action" id="print-btn">Imprimer / PDF</button>
   </div>
-</header>
 
-<div class="container">
 
-  <div class="card no-print">
-    <h2 id="secIdentity">🏫 Informations de l'élève</h2>
-    <div class="grid2">
-      <div><label id="lName">Nom & Prénom</label><input id="studentName" placeholder="Ex: Ahmed El Fassi"></div>
-      <div><label id="lClass">Classe</label><input id="studentClass" placeholder="Ex: 6ème année"></div>
-      <div><label id="lSchool">École</label><input id="schoolName" placeholder="Ex: École Al Fadl"></div>
-      <div><label id="lYear">Année scolaire</label><input id="schoolYear" placeholder="Ex: 2025/2026"></div>
-    </div>
-    <div style="margin-top:10px">
-      <div><label id="lTrim">Trimestre</label>
-        <select id="trimester">
-          <option>Trimestre 1</option><option>Trimestre 2</option><option>Trimestre 3</option>
-        </select>
+  <div class="report-card">
+    <div class="header">
+      <div class="logo-container" onclick="document.getElementById('logo-input').click()">
+        <div id="logo-placeholder" style="text-align:center;">
+          <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6l9-4.91V17h2V9L12 3z M5 13.18v4L12 21l7-3.82v-4L12 17L5 13.18z"/></svg>
+          <div style="font-size:0.65rem; margin-top:4px;">+ Logo</div>
+        </div>
+        <img id="logo-img" style="display:none;" />
+        <input type="file" id="logo-input" accept="image/*" style="display:none" onchange="loadLogo(event)">
+      </div>
+
+
+      <div class="school-info">
+        <input type="text" id="school-name" value="École Excellence" oninput="saveData()">
+        <div class="meta-row">
+          <select id="period-select" onchange="saveData()">
+            <option value="p1">Premier Semestre</option>
+            <option value="p2">Deuxième Semestre</option>
+            <option value="p3">Troisième Semestre</option>
+          </select>
+          <span>|</span>
+          <input type="text" id="school-year" value="2025-2026" style="width: 90px;" oninput="saveData()">
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="card">
-    <h2 id="secGrades">📚 Matières et notes</h2>
+
+    <div class="student-info">
+      <div class="field">
+        <label id="lbl-name">Nom & Prénom</label>
+        <input type="text" id="student-name" placeholder="Ex: Yassine Mansouri" oninput="saveData()">
+      </div>
+      <div class="field">
+        <label id="lbl-class">Classe</label>
+        <input type="text" id="student-class" placeholder="Ex: 3ème Année" oninput="saveData()">
+      </div>
+      <div class="field">
+        <label id="lbl-id">Matricule</label>
+        <input type="text" id="student-id" placeholder="Ex: 2026-88" oninput="saveData()">
+      </div>
+    </div>
+
+
     <table>
       <thead>
         <tr>
-          <th id="thSubject">Matière</th>
-          <th id="thMax" style="width:80px">Barème</th>
-          <th id="thScore" style="width:80px">Note</th>
-          <th style="width:40px"></th>
+          <th id="th-subject">Matière</th>
+          <th id="th-note" style="width: 120px;">Note (/20)</th>
+          <th id="th-coef" style="width: 100px;">Coef</th>
+          <th id="th-total" style="width: 120px;">Total</th>
+          <th class="btn-action" style="width: 50px;">Action</th>
         </tr>
       </thead>
-      <tbody id="gradeRows"></tbody>
+      <tbody id="subjects-body"></tbody>
     </table>
-    <button class="btn secondary no-print" onclick="addRow()">➕ Ajouter une matière</button>
-    <div class="results" id="resultsBox" style="display:none">
-      <div><span id="lAvg" class="no-print">Moyenne :</span> <span class="big" id="avgValue"></span></div>
-      <div><span id="lMention">Mention :</span> <span class="mention" id="mentionValue"></span></div>
+
+
+    <div class="summary-box">
+      <div class="summary-item">
+        <span id="lbl-total-coef">Total Coefficients</span>
+        <span id="res-coef">0</span>
+      </div>
+      <div class="summary-item">
+        <span id="lbl-average">Moyenne Générale</span>
+        <span id="res-average">-- / 20</span>
+      </div>
+      <div class="summary-item">
+        <span id="lbl-mention">Mention</span>
+        <span id="res-mention">--</span>
+      </div>
     </div>
+
+
+    <div class="auto-appreciation" id="auto-appreciation-box">
+      <span id="lbl-apprec-title">Appréciation globale :</span> <span id="res-appreciation">--</span>
+    </div>
+
+
+    <div class="obs-section">
+      <label id="lbl-obs">Observations du professeur principal</label>
+      <textarea id="obs-text" placeholder="Remarques et conseils..." oninput="saveData()"></textarea>
+    </div>
+
+
+    <div class="signatures-grid">
+      <div class="signature-box"><span id="lbl-sig-parents">Signature des parents</span></div>
+      <div class="signature-box"><span id="lbl-sig-director">Cachet & Signature du Directeur</span></div>
+    </div>
+
+
+    <div class="footer-signature">Outil développé par GIMI - Tanger</div>
   </div>
 
-  <div class="card no-print">
-    <h2 id="secActions">⚙️ Actions</h2>
-    <button class="btn" onclick="exportPdf()">🖨️ Exporter PDF / Imprimer</button>
-    <button class="btn secondary" onclick="saveData()">💾 Sauvegarder</button>
-    <button class="btn secondary" onclick="clearData()">🗑️ Réinitialiser</button>
-  </div>
 
-  <div class="card summary" id="summaryBox"></div>
+  <script>
+    let currentLang = 'fr';
 
-  <div class="footer">Bulletin Scolaire Pro — généré localement sur votre appareil.</div>
-</div>
 
-<script>
-const T = {
-  fr: {
-    title:"📄 Bulletin Scolaire Pro", secIdentity:"🏫 Informations de l'élève", secGrades:"📚 Matières et notes",
-    secActions:"⚙️ Actions", lName:"Nom & Prénom", lClass:"Classe", lSchool:"École", lYear:"Année scolaire", lTrim:"Trimestre",
-    thSubject:"Matière", thMax:"Barème", thScore:"Note", addBtn:"➕ Ajouter une matière",
-    lAvg:"Moyenne :", lMention:"Mention :", exportBtn:"🖨️ Exporter PDF / Imprimer", saveBtn:"💾 Sauvegarder", clearBtn:"🗑️ Réinitialiser",
-    placeholderName:"Ex: Ahmed El Fassi", placeholderClass:"Ex: 6ème année", placeholderSchool:"Ex: École Al Fadl", placeholderYear:"Ex: 2025/2026",
-    mention:"Mention :", sTrBien:"Très bien", sBien:"Bien", sAssez:"Assez bien", sPassable:"Passable", sInsuffisant:"Insuffisant",
-    subjDefault:"Matière", noData:"Renseignez au moins une matière pour calculer la moyenne.",
-    reportTitle:"Bulletin de notes", reportOf:"de l'élève", reportIn:"Classe", reportSchool:"École", reportYear:"Année scolaire", reportTrim:"Trimestre",
-    summary:"Bulletin", footer:"Signatures : Directeur | Enseignant | Parent"
-  },
-  ar: {
-    title:"📄 بطاقة النقط المدرسية", secIdentity:"🏫 معلومات التلميذ(ة)", secGrades:"📚 المواد والنقط",
-    secActions:"⚙️ إجراءات", lName:"الاسم الكامل", lClass:"القسم", lSchool:"المؤسسة", lYear:"السنة الدراسية", lTrim:"المرحلة",
-    thSubject:"المادة", thMax:"المعامل", thScore:"النقطة", addBtn:"➕ إضافة مادة",
-    lAvg:"المعدل :", lMention:"التقدير :", exportBtn:"🖨️ تصدير PDF / طباعة", saveBtn:"💾 حفظ", clearBtn:"🗑️ إعادة تعيين",
-    placeholderName:"مثال: أحمد الفاسي", placeholderClass:"مثال: السنة السادسة", placeholderSchool:"مثال: مؤسسة الفضل", placeholderYear:"مثال: 2025/2026",
-    mention:"التقدير :", sTrBien:"ممتاز", sBien:"جيد جدا", sAssez:"جيد", sPassable:"مقبول", sInsuffisant:"ضعيف",
-    subjDefault:"المادة", noData:"أدخل مادة واحدة على الأقل لحساب المعدل.",
-    reportTitle:"بطاقة النقط", reportOf:"التلميذ(ة)", reportIn:"القسم", reportSchool:"المؤسسة", reportYear:"السنة الدراسية", reportTrim:"المرحلة",
-    summary:"البطاقة", footer:"التواقيع : المدير | الأستاذ(ة) | ولي الأمر"
-  }
-};
+    const translations = {
+      fr: {
+        langBtn: "العربية", addBtn: "+ Ajouter Matière", demoBtn: "Remplir Démo",
+        resetBtn: "Réinitialiser", printBtn: "Imprimer / PDF",
+        lblName: "Nom & Prénom", lblClass: "Classe", lblId: "Matricule",
+        thSubject: "Matière", thNote: "Note (/20)", thCoef: "Coef", thTotal: "Total",
+        lblTotalCoef: "Total Coefficients", lblAverage: "Moyenne Générale", lblMention: "Mention",
+        lblApprecTitle: "Appréciation globale :", lblObs: "Observations du professeur principal",
+        lblSigParents: "Signature des parents", lblSigDirector: "Cachet & Signature du Directeur",
+        periods: { p1: "Premier Semestre", p2: "Deuxième Semestre", p3: "Troisième Semestre" }
+      },
+      ar: {
+        langBtn: "Français", addBtn: "+ إضافة مادة", demoBtn: "ملء تجريبي",
+        resetBtn: "إعادة ضبط", printBtn: "طباعة / PDF",
+        lblName: "الاسم والنسب", lblClass: "المستوى", lblId: "رقم التسجيل",
+        thSubject: "المادة", thNote: "النقطة (20/)", thCoef: "المعامل", thTotal: "المجموع",
+        lblTotalCoef: "مجموع المعاملات", lblAverage: "المعدل العام", lblMention: "الميزة",
+        lblApprecTitle: "التقدير العام :", lblObs: "ملاحظات الأستاذ الرئيسي",
+        lblSigParents: "توقيع ولي الأمر", lblSigDirector: "خاتم وتوقيع المدير",
+        periods: { p1: "الدورة الأولى", p2: "الدورة الثانية", p3: "الدورة الثالثة" }
+      }
+    };
 
-let lang = localStorage.getItem('bs_lang') || 'fr';
-let grades = [];
 
-function t(key){ return T[lang][key]; }
+    function getDefaultSubjects() {
+      return [
+        { name_fr: "Mathématiques", name_ar: "الرياضيات", note: "", coef: 3 },
+        { name_fr: "Physique", name_ar: "الفيزياء", note: "", coef: 2 },
+        { name_fr: "SVT", name_ar: "علوم الحياة والأرض", note: "", coef: 2 },
+        { name_fr: "Français", name_ar: "الفرنسية", note: "", coef: 3 },
+        { name_fr: "Arabe", name_ar: "العربية", note: "", coef: 3 },
+        { name_fr: "Anglais", name_ar: "الإنجليزية", note: "", coef: 2 }
+      ];
+    }
 
-function toggleLang(){
-  lang = lang === 'fr' ? 'ar' : 'fr';
-  document.body.classList.toggle('ar', lang === 'ar');
-  document.documentElement.lang = lang;
-  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-  localStorage.setItem('bs_lang', lang);
-  applyTexts();
-}
 
-function applyTexts(){
-  document.getElementById('appTitle').textContent = t('title');
-  document.getElementById('secIdentity').textContent = t('secIdentity');
-  document.getElementById('secGrades').textContent = t('secGrades');
-  document.getElementById('secActions').textContent = t('secActions');
-  document.getElementById('lName').textContent = t('lName');
-  document.getElementById('lClass').textContent = t('lClass');
-  document.getElementById('lSchool').textContent = t('lSchool');
-  document.getElementById('lYear').textContent = t('lYear');
-  document.getElementById('lTrim').textContent = t('lTrim');
-  document.getElementById('thSubject').textContent = t('thSubject');
-  document.getElementById('thMax').textContent = t('thMax');
-  document.getElementById('thScore').textContent = t('thScore');
-  document.getElementById('lAvg').textContent = t('lAvg');
-  document.getElementById('lMention').textContent = t('lMention');
-  document.getElementById('langBtn').textContent = lang === 'fr' ? 'العربية' : 'Français';
-  document.getElementById('studentName').placeholder = t('placeholderName');
-  document.getElementById('studentClass').placeholder = t('placeholderClass');
-  document.getElementById('schoolName').placeholder = t('placeholderSchool');
-  document.getElementById('schoolYear').placeholder = t('placeholderYear');
-}
+    let subjectsData = getDefaultSubjects();
 
-function renderRows(){
-  const tb = document.getElementById('gradeRows');
-  tb.innerHTML = '';
-  grades.forEach((g, i) => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td><input data-i="${i}" data-f="name" value="${esc(g.name || '')}" placeholder="${t('subjDefault')}"></td>
-      <td><input data-i="${i}" data-f="max" type="number" min="0" step="0.5" value="${g.max}"></td>
-      <td><input data-i="${i}" data-f="score" type="number" min="0" step="0.25" value="${g.score}"></td>
-      <td><button class="del" onclick="removeRow(${i})">✕</button></td>`;
-    tb.appendChild(tr);
-  });
-  document.querySelectorAll('#gradeRows input').forEach(inp => {
-    inp.addEventListener('input', function(){
-      const i = +this.dataset.i;
-      grades[i][this.dataset.f] = this.dataset.f === 'name' ? this.value : +this.value || 0;
-      if(this.dataset.f !== 'name'){ calc(); saveData(); }
-    });
-  });
-  calc();
-}
 
-function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+    function init() {
+      const saved = localStorage.getItem('bulletin_data');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        subjectsData = parsed.subjects || subjectsData;
+        document.getElementById('student-name').value = parsed.name || '';
+        document.getElementById('student-class').value = parsed.class || '';
+        document.getElementById('student-id').value = parsed.id || '';
+        document.getElementById('school-name').value = parsed.schoolName || 'École Excellence';
+        document.getElementById('school-year').value = parsed.schoolYear || '2025-2026';
+        document.getElementById('period-select').value = parsed.period || 'p1';
+        document.getElementById('obs-text').value = parsed.obs || '';
+      }
+      render();
+    }
 
-function addRow(){
-  grades.push({name:'', max:10, score:0});
-  renderRows();
-}
 
-function removeRow(i){ grades.splice(i,1); renderRows(); }
+    function render() {
+      const t = translations[currentLang];
+      document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+      
+      document.getElementById('lang-btn').innerText = t.langBtn;
+      document.getElementById('add-btn').innerText = t.addBtn;
+      document.getElementById('demo-btn').innerText = t.demoBtn;
+      document.getElementById('reset-btn').innerText = t.resetBtn;
+      document.getElementById('print-btn').innerText = t.printBtn;
+      document.getElementById('lbl-name').innerText = t.lblName;
+      document.getElementById('lbl-class').innerText = t.lblClass;
+      document.getElementById('lbl-id').innerText = t.lblId;
+      document.getElementById('th-subject').innerText = t.thSubject;
+      document.getElementById('th-note').innerText = t.thNote;
+      document.getElementById('th-coef').innerText = t.thCoef;
+      document.getElementById('th-total').innerText = t.thTotal;
+      document.getElementById('lbl-total-coef').innerText = t.lblTotalCoef;
+      document.getElementById('lbl-average').innerText = t.lblAverage;
+      document.getElementById('lbl-mention').innerText = t.lblMention;
+      document.getElementById('lbl-apprec-title').innerText = t.lblApprecTitle;
+      document.getElementById('lbl-obs').innerText = t.lblObs;
+      document.getElementById('lbl-sig-parents').innerText = t.lblSigParents;
+      document.getElementById('lbl-sig-director').innerText = t.lblSigDirector;
 
-function calc(){
-  const valid = grades.filter(g => g.max > 0 && g.name.trim() !== '');
-  const box = document.getElementById('resultsBox');
-  if(valid.length === 0){ box.style.display='none'; renderSummary(null); return; }
-  const totalWeight = valid.reduce((s,g)=> s + g.max, 0);
-  const avg = valid.reduce((s,g)=> s + (g.score/g.max)*20*g.max, 0) / totalWeight;
-  const rounded = Math.round(avg*100)/100;
-  let mention = t('sInsuffisant'), cls='i';
-  if(rounded >= 18){ mention = t('sTrBien'); cls='tb'; }
-  else if(rounded >= 16){ mention = t('sTrBien'); cls='tb'; }
-  else if(rounded >= 14){ mention = t('sBien'); cls='b'; }
-  else if(rounded >= 12){ mention = t('sAssez'); cls='ab'; }
-  else if(rounded >= 10){ mention = t('sPassable'); cls='p'; }
-  box.style.display='flex';
-  document.getElementById('avgValue').textContent = rounded.toFixed(2) + ' / 20';
-  const m = document.getElementById('mentionValue');
-  m.textContent = mention;
-  m.className = 'mention ' + cls;
-  renderSummary(rounded);
-}
 
-function renderSummary(avg){
-  const box = document.getElementById('summaryBox');
-  if(avg === null){ box.innerHTML = `<b>${t('reportTitle')}</b><br>${t('noData')}`; return; }
-  const name = val('studentName'), cls = val('studentClass'), sch = val('schoolName'), yr = val('schoolYear');
-  const trim = document.getElementById('trimester').value;
-  const lines = grades.filter(g=>g.max>0 && g.name.trim()).map(g => `• ${g.name}: ${g.score} / ${g.max}`).join('\n');
-  box.innerHTML = `<b>${t('reportTitle')}</b> — ${t('reportOf')} ${esc(name)}
-${t('reportIn')}: ${esc(cls)} | ${t('reportSchool')}: ${esc(sch)} | ${t('reportYear')}: ${esc(yr)} | ${t('reportTrim')}: ${esc(trim)}
-─────────────────
-${lines}
-─────────────────
-<b>${t('lAvg')} ${avg.toFixed(2)} / 20</b>
-${t('footer')}`;
-}
+      const select = document.getElementById('period-select');
+      const selectedVal = select.value;
+      select.innerHTML = `
+        <option value="p1">${t.periods.p1}</option>
+        <option value="p2">${t.periods.p2}</option>
+        <option value="p3">${t.periods.p3}</option>
+      `;
+      select.value = selectedVal;
 
-function val(id){ return document.getElementById(id).value.trim(); }
 
-function saveData(){
-  const data = {
-    studentName: val('studentName'), studentClass: val('studentClass'),
-    schoolName: val('schoolName'), schoolYear: val('schoolYear'), trimester: document.getElementById('trimester').value,
-    grades: grades
-  };
-  localStorage.setItem('bs_data', JSON.stringify(data));
-  alert(lang === 'fr' ? '✅ Données sauvegardées' : '✅ تم حفظ البيانات');
-}
+      const tbody = document.getElementById('subjects-body');
+      tbody.innerHTML = '';
 
-function clearData(){
-  if(!confirm(lang === 'fr' ? 'Effacer toutes les données ?' : 'هل تريد مسح كل البيانات؟')) return;
-  localStorage.removeItem('bs_data');
-  grades = [{name:'',max:10,score:0}];
-  document.getElementById('studentName').value='';
-  document.getElementById('studentClass').value='';
-  document.getElementById('schoolName').value='';
-  document.getElementById('schoolYear').value='';
-  document.getElementById('trimester').selectedIndex=0;
-  renderRows();
-}
 
-function exportPdf(){ window.print(); }
+      subjectsData.forEach((item, idx) => {
+        const name = currentLang === 'ar' ? (item.name_ar || item.name_fr) : (item.name_fr || item.name_ar);
+        const total = (item.note !== "" && !isNaN(item.note)) ? (parseFloat(item.note) * parseFloat(item.coef)).toFixed(2) : "-";
 
-document.getElementById('studentName').addEventListener('input', ()=>{ calc(); });
-document.getElementById('studentClass').addEventListener('input', ()=>{ calc(); });
-document.getElementById('schoolName').addEventListener('input', ()=>{ calc(); });
-document.getElementById('schoolYear').addEventListener('input', ()=>{ calc(); });
-document.getElementById('trimester').addEventListener('change', ()=>{ calc(); });
 
-try{
-  const saved = JSON.parse(localStorage.getItem('bs_data'));
-  if(saved){
-    if(saved.studentName) document.getElementById('studentName').value = saved.studentName;
-    if(saved.studentClass) document.getElementById('studentClass').value = saved.studentClass;
-    if(saved.schoolName) document.getElementById('schoolName').value = saved.schoolName;
-    if(saved.schoolYear) document.getElementById('schoolYear').value = saved.schoolYear;
-    if(saved.trimester) document.getElementById('trimester').value = saved.trimester;
-    if(saved.grades && saved.grades.length) grades = saved.grades;
-    else grades = [{name:'',max:10,score:0}];
-  } else {
-    grades = [{name:'',max:10,score:0}];
-  }
-}catch(e){ grades = [{name:'',max:10,score:0}]; }
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><input type="text" class="subject-name" value="${name}" oninput="updateSubjectName(${idx}, this.value)"></td>
+          <td><input type="number" min="0" max="20" step="0.25" value="${item.note}" oninput="updateNote(${idx}, this.value)"></td>
+          <td><input type="number" min="1" value="${item.coef}" oninput="updateCoef(${idx}, this.value)"></td>
+          <td>${total}</td>
+          <td class="btn-action"><button class="danger" style="padding:2px 8px;" onclick="removeSubject(${idx})">×</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
 
-applyTexts();
-renderRows();
-</script>
+
+      calculate();
+    }
+
+
+    function updateSubjectName(idx, val) {
+      if (currentLang === 'ar') subjectsData[idx].name_ar = val;
+      else subjectsData[idx].name_fr = val;
+      saveData();
+    }
+
+
+    function updateNote(idx, val) { subjectsData[idx].note = val; renderCalculationsOnly(); saveData(); }
+    function updateCoef(idx, val) { subjectsData[idx].coef = val; renderCalculationsOnly(); saveData(); }
+
+
+    function addSubject() {
+      subjectsData.push({ name_fr: "Nouvelle Matière", name_ar: "مادة جديدة", note: "", coef: 1 });
+      render(); saveData();
+    }
+
+
+    function removeSubject(idx) { subjectsData.splice(idx, 1); render(); saveData(); }
+
+
+    function calculate() {
+      let totalPoints = 0, totalCoef = 0, valid = false;
+      subjectsData.forEach(item => {
+        const n = parseFloat(item.note), c = parseFloat(item.coef);
+        if (!isNaN(n) && !isNaN(c) && item.note !== "") { totalPoints += n * c; totalCoef += c; valid = true; }
+      });
+
+
+      document.getElementById('res-coef').innerText = totalCoef;
+
+
+      if (valid && totalCoef > 0) {
+        const avg = (totalPoints / totalCoef).toFixed(2);
+        document.getElementById('res-average').innerText = `${avg} / 20`;
+        document.getElementById('res-mention').innerText = getMention(avg);
+        document.getElementById('res-appreciation').innerText = getAppreciation(avg);
+      } else {
+        document.getElementById('res-average').innerText = "-- / 20";
+        document.getElementById('res-mention').innerText = "--";
+        document.getElementById('res-appreciation').innerText = "--";
+      }
+    }
+
+
+    function renderCalculationsOnly() {
+      const rows = document.querySelectorAll('#subjects-body tr');
+      subjectsData.forEach((item, idx) => {
+        const totalCell = rows[idx].children[3];
+        const total = (item.note !== "" && !isNaN(item.note)) ? (parseFloat(item.note) * parseFloat(item.coef)).toFixed(2) : "-";
+        totalCell.innerText = total;
+      });
+      calculate();
+    }
+
+
+    function getMention(avg) {
+      if (avg >= 16) return currentLang === 'ar' ? 'ممتاز' : 'Très Bien';
+      if (avg >= 14) return currentLang === 'ar' ? 'جيد جداً' : 'Bien';
+      if (avg >= 12) return currentLang === 'ar' ? 'جيد' : 'Assez Bien';
+      if (avg >= 10) return currentLang === 'ar' ? 'مقبول' : 'Passable';
+      return currentLang === 'ar' ? 'دون المتوسط' : 'Insuffisant';
+    }
+
+
+    function getAppreciation(avg) {
+      if (avg >= 16) return currentLang === 'ar' ? 'عمل ممتاز، تهانينا!' : 'Excellents résultats, félicitations !';
+      if (avg >= 14) return currentLang === 'ar' ? 'عمل جيد جداً، واصل الإجتهاد.' : 'Très bon travail, continuez ainsi.';
+      if (avg >= 12) return currentLang === 'ar' ? 'عمل جيد، يمكنك تحقيق الأفضل.' : 'Bon travail dans ensemble, peut mieux faire.';
+      if (avg >= 10) return currentLang === 'ar' ? 'نتائج مقبولة، يجب بذل المزيد من الجهد.' : 'Résultats passables, des efforts sont requis.';
+      return currentLang === 'ar' ? 'نتائج غير كافية، يجب العمل بجدية أكبر.' : 'Résultats insuffisants, un redressement s\'impose.';
+    }
+
+
+    function toggleLang() { currentLang = currentLang === 'fr' ? 'ar' : 'fr'; render(); }
+
+
+    function fillDemo() {
+      document.getElementById('student-name').value = "Yassine Mansouri";
+      document.getElementById('student-class').value = "3ème Année Collège";
+      document.getElementById('student-id').value = "2026-442";
+      document.getElementById('obs-text').value = currentLang === 'ar' ? 'تلميذ مجد ومواظب، يتمنى له الطاقم التربوي المزيد من التوفيق.' : 'Élève très sérieux et assidu. Bon comportement général.';
+
+
+      subjectsData = [
+        { name_fr: "Mathématiques", name_ar: "الرياضيات", note: "16.5", coef: 3 },
+        { name_fr: "Physique", name_ar: "الفيزياء", note: "14.0", coef: 2 },
+        { name_fr: "SVT", name_ar: "علوم الحياة والأرض", note: "15.0", coef: 2 },
+        { name_fr: "Français", name_ar: "الفرنسية", note: "13.5", coef: 3 },
+        { name_fr: "Arabe", name_ar: "العربية", note: "17.0", coef: 3 },
+        { name_fr: "Anglais", name_ar: "الإنجليزية", note: "15.5", coef: 2 }
+      ];
+      render(); saveData();
+    }
+
+
+    function resetForm() {
+      document.getElementById('student-name').value = "";
+      document.getElementById('student-class').value = "";
+      document.getElementById('student-id').value = "";
+      document.getElementById('obs-text').value = "";
+      subjectsData = getDefaultSubjects();
+      localStorage.removeItem('bulletin_data');
+      render();
+    }
+
+
+    function loadLogo(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          document.getElementById('logo-img').src = evt.target.result;
+          document.getElementById('logo-img').style.display = 'block';
+          document.getElementById('logo-placeholder').style.display = 'none';
+        }
+        reader.readAsDataURL(file);
+      }
+    }
+
+
+    function saveData() {
+      const data = {
+        name: document.getElementById('student-name').value,
+        class: document.getElementById('student-class').value,
+        id: document.getElementById('student-id').value,
+        schoolName: document.getElementById('school-name').value,
+        schoolYear: document.getElementById('school-year').value,
+        period: document.getElementById('period-select').value,
+        obs: document.getElementById('obs-text').value,
+        subjects: subjectsData
+      };
+      localStorage.setItem('bulletin_data', JSON.stringify(data));
+    }
+
+
+    init();
+  </script>
 </body>
 </html>
