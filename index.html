@@ -361,19 +361,34 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 600px;
+      min-width: 480px;
+      table-layout: auto;
+    }
+    th:first-child, td:first-child {
+      width: auto;
+      min-width: 45%;
+      white-space: normal;
+      word-break: normal;
+    }
+    td:first-child input {
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+      text-overflow: clip;
+      overflow: visible;
     }
 
 
     @media screen and (max-width: 640px) {
       table { min-width: 0; }
       th, td { padding: 0.5rem 0.3rem; font-size: 0.75rem; }
+      th:first-child, td:first-child { width: auto; min-width: 45%; }
       th:nth-child(2), td:nth-child(2) { width: 48px !important; }
       th:nth-child(3), td:nth-child(3) { width: 40px !important; }
       th:nth-child(4), td:nth-child(4) { width: 52px !important; }
       th:nth-child(5), td:nth-child(5) { width: 30px !important; }
       td input { font-size: 0.75rem; padding: 0.15rem; }
-      td:first-child input { white-space: normal; }
+      td:first-child input { white-space: normal; text-align: start; }
     }
 
 
@@ -743,10 +758,10 @@
         <thead>
           <tr>
             <th id="th-subject">Matière</th>
-            <th id="th-note" style="width: 100px;">Note (/20)</th>
-            <th id="th-coef" style="width: 80px;">Coef</th>
-            <th id="th-total" style="width: 100px;">Total</th>
-            <th class="btn-action" style="width: 50px;">Action</th>
+            <th id="th-note" style="width: 70px;">Note (/20)</th>
+            <th id="th-coef" style="width: 60px;">Coef</th>
+            <th id="th-total" style="width: 70px;">Total</th>
+            <th class="btn-action" id="th-action" style="width: 50px;">Action</th>
           </tr>
         </thead>
         <tbody id="subjects-body"></tbody>
@@ -806,7 +821,7 @@
         langBtn: "العربية", addBtn: "+ Ajouter Matière", demoBtn: "Remplir Démo",
         resetBtn: "Réinitialiser", printBtn: "Imprimer / PDF", pdfBtn: "Télécharger PDF",
         lblName: "Nom & Prénom", lblClass: "Classe", lblId: "Matricule",
-        thSubject: "Matière", thNote: "Note (/20)", thCoef: "Coef", thTotal: "Total",
+        thSubject: "Matière", thNote: "Note (/20)", thCoef: "Coef", thTotal: "Total", thAction: "Action",
         lblTotalCoef: "Total Coefficients", lblAverage: "Moyenne Générale", lblMention: "Mention",
         lblApprecTitle: "Appréciation globale :", lblObs: "Observations du professeur principal",
         lblSigParents: "Signature des parents", lblSigDirector: "Cachet & Signature du Directeur",
@@ -815,9 +830,9 @@
       },
       ar: {
         langBtn: "Français", addBtn: "+ إضافة مادة", demoBtn: "ملء تجريبي",
-        resetBtn: "إعادة ضبط", printBtn: "طباعة / PDF", pdfBtn: "تحميل PDF",
+        resetBtn: "إعادة ضبط", printBtn: "طباعة المستند", pdfBtn: "تحميل المستند",
         lblName: "الاسم والنسب", lblClass: "المستوى", lblId: "رقم التسجيل",
-        thSubject: "المادة", thNote: "النقطة (20/)", thCoef: "المعامل", thTotal: "المجموع",
+        thSubject: "المادة", thNote: "النقطة (20/)", thCoef: "المعامل", thTotal: "المجموع", thAction: "إجراء",
         lblTotalCoef: "مجموع المعاملات", lblAverage: "المعدل العام", lblMention: "الميزة",
         lblApprecTitle: "التقدير العام :", lblObs: "ملاحظات الأستاذ الرئيسي",
         lblSigParents: "توقيع ولي الأمر", lblSigDirector: "خاتم وتوقيع المدير",
@@ -891,6 +906,7 @@
       document.getElementById('th-note').innerText = t.thNote;
       document.getElementById('th-coef').innerText = t.thCoef;
       document.getElementById('th-total').innerText = t.thTotal;
+      document.getElementById('th-action').innerText = t.thAction;
       document.getElementById('lbl-total-coef').innerText = t.lblTotalCoef;
       document.getElementById('lbl-average').innerText = t.lblAverage;
       document.getElementById('lbl-mention').innerText = t.lblMention;
@@ -1073,10 +1089,12 @@
 
 
     function fillDemo() {
-      document.getElementById('student-name').value = "Yassine Mansouri";
-      document.getElementById('student-class').value = "3ème Année Collège";
+      const isAr = currentLang === 'ar';
+      document.getElementById('school-name').value = isAr ? "مدرسة عبد الكريم" : "École Abdelkrim";
+      document.getElementById('student-name').value = isAr ? "ياسين المنصوري" : "Yassine Mansouri";
+      document.getElementById('student-class').value = isAr ? "السنة الثالثة إعدادي" : "3ème Année Collège";
       document.getElementById('student-id').value = "2026-442";
-      document.getElementById('obs-text').value = currentLang === 'ar' ? 'تلميذ مجد ومواظب، يتمنى له الطاقم التربوي المزيد من التوفيق.' : 'Élève très sérieux et assidu. Bon comportement général.';
+      document.getElementById('obs-text').value = isAr ? 'تلميذ مجد ومواظب، يتمنى له الطاقم التربوي المزيد من التوفيق.' : 'Élève très sérieux et assidu. Bon comportement général.';
 
 
       subjectsData = [
