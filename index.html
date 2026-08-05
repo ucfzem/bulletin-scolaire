@@ -222,6 +222,28 @@
     }
 
 
+    .table-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+    @media screen and (max-width: 640px) {
+      body { padding: 12px; }
+      .report-card { padding: 16px; }
+      .toolbar { display: grid; grid-template-columns: 1fr 1fr; }
+      .toolbar button { width: 100%; font-size: 0.8rem; padding: 10px 8px; }
+      .toolbar button:last-child { grid-column: span 2; }
+      .header { flex-wrap: wrap; gap: 12px; }
+      .logo-container { width: 64px; height: 64px; }
+      .logo-container svg { width: 24px; height: 24px; }
+      .school-info { flex: 1; min-width: 0; }
+      #school-name { width: 100%; font-size: 1rem; }
+      .meta-row { flex-wrap: wrap; }
+      .table-wrap table { min-width: 440px; }
+      th, td { padding: 8px 6px; font-size: 0.8rem; }
+      .summary-box { flex-wrap: wrap; gap: 12px; }
+      .summary-item { flex: 1; min-width: 90px; }
+      .summary-item span:last-child { font-size: 1.1rem; }
+      .signatures-grid { grid-template-columns: 1fr; }
+    }
+
     @media print {
       body { background: white; padding: 0; }
       .toolbar, .btn-action, th:last-child, td:last-child { display: none !important; }
@@ -286,18 +308,20 @@
     </div>
 
 
-    <table>
-      <thead>
-        <tr>
-          <th id="th-subject">Matière</th>
-          <th id="th-note" style="width: 120px;">Note (/20)</th>
-          <th id="th-coef" style="width: 100px;">Coef</th>
-          <th id="th-total" style="width: 120px;">Total</th>
-          <th class="btn-action" style="width: 50px;">Action</th>
-        </tr>
-      </thead>
-      <tbody id="subjects-body"></tbody>
-    </table>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th id="th-subject">Matière</th>
+            <th id="th-note" style="width: 120px;">Note (/20)</th>
+            <th id="th-coef" style="width: 100px;">Coef</th>
+            <th id="th-total" style="width: 120px;">Total</th>
+            <th class="btn-action" style="width: 50px;">Action</th>
+          </tr>
+        </thead>
+        <tbody id="subjects-body"></tbody>
+      </table>
+    </div>
 
 
     <div class="summary-box">
