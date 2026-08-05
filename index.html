@@ -842,6 +842,13 @@
     };
 
 
+    function getSchoolYear() {
+      const now = new Date();
+      const y = now.getFullYear();
+      return now.getMonth() >= 7 ? `${y}-${y + 1}` : `${y - 1}-${y}`;
+    }
+
+
     function getDefaultSubjects() {
       return [
         { name_fr: "Mathématiques", name_ar: "الرياضيات", note: "", coef: 3 },
@@ -864,6 +871,10 @@
       }
 
 
+      const currentYear = getSchoolYear();
+      document.getElementById('school-year').value = currentYear;
+
+
       const saved = localStorage.getItem('bulletin_data');
       if (saved) {
         try {
@@ -873,7 +884,7 @@
           document.getElementById('student-class').value = parsed.class || '';
           document.getElementById('student-id').value = parsed.id || '';
           document.getElementById('school-name').value = parsed.schoolName || 'École Excellence';
-          document.getElementById('school-year').value = parsed.schoolYear || '2026-2027';
+          document.getElementById('school-year').value = (parsed.schoolYear && parsed.schoolYear === currentYear) ? parsed.schoolYear : currentYear;
           document.getElementById('period-select').value = parsed.period || 'p1';
           document.getElementById('obs-text').value = parsed.obs || '';
           
