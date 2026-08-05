@@ -93,10 +93,28 @@
       width: 100%;
       max-width: 900px;
       display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1.25rem;
       flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: space-between;
       align-items: center;
+      margin-bottom: 1.25rem;
+    }
+
+
+    .actions-main {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.5rem;
+      flex: 1;
+      min-width: 0;
+    }
+
+
+    .actions-utility {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-shrink: 0;
     }
 
 
@@ -112,6 +130,7 @@
       transition: all 0.2s ease;
       white-space: nowrap;
       outline: none;
+      box-sizing: border-box;
     }
 
 
@@ -167,17 +186,64 @@
     @media (min-width: 2000px) { .report-card { max-width: 1400px; padding: 4rem; } }
 
 
-    /* ========== HEADER ========== */
-    .header {
+    /* ========== HEADER (centré) ========== */
+    .header-content {
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
       align-items: center;
+      text-align: center;
+      width: 100%;
       border-bottom: 2px solid var(--border);
       padding-bottom: 1.25rem;
       margin-bottom: 1.5rem;
-      gap: 1rem;
-      flex-wrap: wrap;
     }
+
+
+    .school-title {
+      width: 100%;
+      max-width: 100%;
+      margin: 1rem 0 0.5rem 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--navy);
+      text-align: center;
+      border: none;
+      border-bottom: 1px dashed var(--gold);
+      background: transparent;
+      padding: 0.2rem 0.5rem;
+      cursor: text;
+      box-sizing: border-box;
+    }
+    .school-title:focus { outline: none; border-bottom-color: var(--gold); }
+    html[dir="rtl"] .school-title { direction: rtl; }
+
+
+    .meta-info {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-top: 0.25rem;
+    }
+    html[dir="rtl"] .meta-info { flex-direction: row-reverse; }
+
+
+    .meta-info select,
+    .meta-info input {
+      font-size: 0.85rem !important;
+      color: var(--text-muted) !important;
+      font-weight: 500 !important;
+      border: none;
+      border-bottom: 1px dashed var(--gold);
+      background: transparent;
+      padding: 0.2rem 0;
+      cursor: text;
+    }
+    .meta-info select:focus, .meta-info input:focus { outline: none; }
+
+
+    .divider { color: var(--text-light); font-weight: 300; }
 
 
     .logo-container {
@@ -232,53 +298,6 @@
 
 
     #logo-input { display: none; }
-
-
-    .school-info {
-      text-align: right;
-      flex: 1;
-      min-width: 200px;
-    }
-    html[dir="rtl"] .school-info { text-align: left; }
-
-
-    .school-info input,
-    .school-info select {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--text);
-      border: none;
-      border-bottom: 1px dashed var(--gold);
-      background: transparent;
-      padding: 0.2rem 0;
-      max-width: 100%;
-    }
-
-
-    .school-info input:focus,
-    .school-info select:focus {
-      border-bottom-color: var(--gold);
-      outline: none;
-    }
-
-
-    .meta-row {
-      display: flex;
-      gap: 0.5rem;
-      justify-content: flex-end;
-      align-items: center;
-      margin-top: 0.5rem;
-      flex-wrap: wrap;
-    }
-    html[dir="rtl"] .meta-row { justify-content: flex-start; }
-
-
-    .meta-row input,
-    .meta-row select {
-      font-size: 0.85rem !important;
-      color: var(--text-muted) !important;
-      font-weight: 500 !important;
-    }
 
 
     /* ========== STUDENT INFO ========== */
@@ -535,9 +554,8 @@
     }
 
 
-    html[dir="rtl"] .header {
+    html[dir="rtl"] .header-content {
       width: 100%;
-      justify-content: space-between;
     }
 
 
@@ -557,6 +575,29 @@
     html[dir="rtl"] .summary-box {
       justify-content: space-between;
     }
+
+
+    /* ========== CAPTURE PDF (classe temporaire) ========== */
+    body.pdf-mode {
+      overflow-x: visible !important;
+    }
+    body.pdf-mode .table-wrapper {
+      overflow: visible !important;
+      border: none !important;
+    }
+    body.pdf-mode input,
+    body.pdf-mode select,
+    body.pdf-mode textarea {
+      border: none !important;
+      background: transparent !important;
+      color: #000000 !important;
+    }
+    body.pdf-mode .logo-container {
+      border: none !important;
+      background: transparent !important;
+    }
+    body.pdf-mode .logo-text { display: none !important; }
+    body.pdf-mode .report-card { box-shadow: none; border-top: none; }
 
 
     /* ========== PRINT ========== */
@@ -619,13 +660,17 @@
 
   <!-- TOOLBAR -->
   <div class="toolbar">
-    <button onclick="toggleLang()" class="secondary" id="lang-btn">العربية</button>
-    <button onclick="addSubject()" class="btn-action" id="add-btn">+ Ajouter Matière</button>
-    <button onclick="fillDemo()" class="btn-action" id="demo-btn">Remplir Démo</button>
-    <button onclick="resetForm()" class="danger btn-action" id="reset-btn">Réinitialiser</button>
-    <button onclick="window.print()" class="btn-action" id="print-btn">Imprimer / PDF</button>
-    <button onclick="TelechargerPDF()" class="btn-action" id="pdf-btn">Télécharger PDF</button>
-    <button onclick="toggleTheme()" class="theme-toggle" id="theme-btn" aria-label="Changer le thème">🌓</button>
+    <div class="actions-main">
+      <button onclick="addSubject()" class="btn-action" id="add-btn">+ Ajouter Matière</button>
+      <button onclick="fillDemo()" class="btn-action" id="demo-btn">Remplir Démo</button>
+      <button onclick="window.print()" class="btn-action" id="print-btn">Imprimer / PDF</button>
+      <button onclick="TelechargerPDF()" class="btn-action" id="pdf-btn">Télécharger PDF</button>
+      <button onclick="resetForm()" class="danger btn-action" id="reset-btn">Réinitialiser</button>
+    </div>
+    <div class="actions-utility">
+      <button onclick="toggleLang()" class="secondary" id="lang-btn">العربية</button>
+      <button onclick="toggleTheme()" class="theme-toggle" id="theme-btn" aria-label="Changer le thème">🌓</button>
+    </div>
   </div>
 
 
@@ -633,7 +678,7 @@
   <div class="report-card">
     
     <!-- HEADER -->
-    <div class="header">
+    <div class="header-content">
       <div class="logo-container" onclick="document.getElementById('logo-input').click()" onkeydown="if(event.key==='Enter'||event.key===' ') document.getElementById('logo-input').click()" tabindex="0" role="button" aria-label="Ajouter un logo">
         <div id="logo-placeholder">
           <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6l9-4.91V17h2V9L12 3z M5 13.18v4L12 21l7-3.82v-4L12 17L5 13.18z"/></svg>
@@ -643,18 +688,16 @@
         <input type="file" id="logo-input" accept="image/*" onchange="loadLogo(event)">
       </div>
 
+      <input type="text" id="school-name" class="school-title" value="École Excellence" oninput="saveData()" maxlength="100">
 
-      <div class="school-info">
-        <input type="text" id="school-name" value="École Excellence" oninput="saveData()" maxlength="100">
-        <div class="meta-row">
-          <select id="period-select" onchange="saveData()">
-            <option value="p1">Premier Semestre</option>
-            <option value="p2">Deuxième Semestre</option>
-            <option value="p3">Troisième Semestre</option>
-          </select>
-          <span>|</span>
-          <input type="text" id="school-year" value="2026-2027" style="width: 6rem;" oninput="saveData()" maxlength="9">
-        </div>
+      <div class="meta-info">
+        <select id="period-select" onchange="saveData()">
+          <option value="p1">Premier Semestre</option>
+          <option value="p2">Deuxième Semestre</option>
+          <option value="p3">Troisième Semestre</option>
+        </select>
+        <span class="divider">|</span>
+        <input type="text" id="school-year" value="2026-2027" style="width: 6rem;" oninput="saveData()" maxlength="9">
       </div>
     </div>
 
@@ -959,26 +1002,22 @@
 
 
     function TelechargerPDF() {
-      const original = document.querySelector('.report-card');
-      const clone = original.cloneNode(true);
-      clone.setAttribute('data-theme', 'light');
-      clone.style.position = 'absolute';
-      clone.style.left = '-9999px';
-      clone.style.top = '0';
-      clone.style.width = '210mm';
-      clone.style.boxShadow = 'none';
-      clone.style.borderTop = 'none';
-      const wrapper = clone.querySelector('.table-wrapper');
+      const root = document.documentElement;
+      const card = document.querySelector('.report-card');
+      const prevTheme = root.getAttribute('data-theme') || 'light';
+      const prevWidth = card.style.width;
+      const prevMaxWidth = card.style.maxWidth;
+      const wrapper = card.querySelector('.table-wrapper');
+      const prevWOverflow = wrapper ? wrapper.style.overflow : '';
+      const prevWBorder = wrapper ? wrapper.style.border : '';
+      root.setAttribute('data-theme', 'light');
+      document.body.classList.add('pdf-mode');
+      card.style.width = '210mm';
+      card.style.maxWidth = '210mm';
       if (wrapper) {
         wrapper.style.overflow = 'visible';
         wrapper.style.border = 'none';
       }
-      clone.querySelectorAll('input, select, textarea').forEach(el => {
-        el.style.border = 'none';
-        el.style.background = 'transparent';
-        el.style.color = '#000000';
-      });
-      document.body.appendChild(clone);
       const opt = {
         margin: [8, 8, 8, 8],
         filename: 'Bulletin_Scolaire.pdf',
@@ -987,8 +1026,15 @@
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
         pagebreak: { mode: ['css', 'legacy'] }
       };
-      html2pdf().set(opt).from(clone).save().then(() => {
-        document.body.removeChild(clone);
+      html2pdf().set(opt).from(card).save().then(() => {
+        document.body.classList.remove('pdf-mode');
+        root.setAttribute('data-theme', prevTheme);
+        card.style.width = prevWidth;
+        card.style.maxWidth = prevMaxWidth;
+        if (wrapper) {
+          wrapper.style.overflow = prevWOverflow;
+          wrapper.style.border = prevWBorder;
+        }
       });
     }
 
