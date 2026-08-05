@@ -519,6 +519,46 @@
     }
 
 
+    /* ========== RTL ========== */
+    html[dir="rtl"] body {
+      direction: rtl;
+      text-align: right;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+
+
+    html[dir="rtl"] .toolbar,
+    html[dir="rtl"] .report-card {
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+
+
+    html[dir="rtl"] .header {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+
+    html[dir="rtl"] .logo-container {
+      justify-content: flex-start;
+      margin-left: 0;
+    }
+
+
+    html[dir="rtl"] table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0;
+    }
+
+
+    html[dir="rtl"] .summary-box {
+      justify-content: space-between;
+    }
+
+
     /* ========== PRINT ========== */
     @media print {
       body {
@@ -613,7 +653,7 @@
             <option value="p3">Troisième Semestre</option>
           </select>
           <span>|</span>
-          <input type="text" id="school-year" value="2025-2026" style="width: 6rem;" oninput="saveData()" maxlength="9">
+          <input type="text" id="school-year" value="2026-2027" style="width: 6rem;" oninput="saveData()" maxlength="9">
         </div>
       </div>
     </div>
@@ -757,7 +797,7 @@
           document.getElementById('student-class').value = parsed.class || '';
           document.getElementById('student-id').value = parsed.id || '';
           document.getElementById('school-name').value = parsed.schoolName || 'École Excellence';
-          document.getElementById('school-year').value = parsed.schoolYear || '2025-2026';
+          document.getElementById('school-year').value = parsed.schoolYear || '2026-2027';
           document.getElementById('period-select').value = parsed.period || 'p1';
           document.getElementById('obs-text').value = parsed.obs || '';
           
