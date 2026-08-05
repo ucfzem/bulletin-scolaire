@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bulletin Scolaire Pro</title>
+<style>
+  :root{
+    --main:#1d4ed8; --dark:#0f172a; --bg:#f1f5f9; --card:#fff;
+    --border:#e2e8f0; --ok:#16a34a; --warn:#d97706; --bad:#dc2626;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:'Segoe UI', Tahoma, Arial, sans-serif; background:var(--bg); color:var(--dark); padding-bottom:60px;}
+  body.ar{font-family:'Tahoma','Segoe UI',Arial,sans-serif;}
+  header{background:linear-gradient(135deg,var(--main),#2563eb); color:#fff; padding:18px 16px; display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between;}
+  header h1{font-size:1.2rem;}
+  .lang-btn{background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.4); color:#fff; padding:8px 14px; border-radius:8px; cursor:pointer; font-size:.9rem;}
+  .lang-btn:hover{background:rgba(255,255,255,.28);}
+  .container{max-width:760px; margin:0 auto; padding:16px;}
+  .card{background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px; margin-bottom:16px; box-shadow:0 1px 3px rgba(0,0,0,.05);}
+  .card h2{font-size:1rem; color:var(--main); margin-bottom:12px;}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  label{display:block; font-size:.8rem; color:#64748b; margin-bottom:4px;}
+  input, select{width:100%; padding:9px 10px; border:1px solid var(--border); border-radius:8px; font-size:.95rem;}
+  input:focus, select:focus{outline:2px solid var(--main); outline-offset:-1px;}
+  table{width:100%; border-collapse:collapse; font-size:.9rem;}
+  th, td{padding:8px; border-bottom:1px solid var(--border); text-align:left;}
+  th{background:#eff6ff; color:var(--main); font-weight:600;}
+  body.ar th, body.ar td{text-align:right;}
+  .del{background:none; border:none; color:var(--bad); font-size:1.1rem; cursor:pointer;}
+  .btn{display:inline-block; background:var(--main); color:#fff; border:none; padding:11px 18px; border-radius:8px; cursor:pointer; font-size:.95rem; margin:4px 6px 4px 0;}
+  .btn.secondary{background:#fff; color:var(--main); border:1px solid var(--main);}
+  .btn:hover{filter:brightness(1.1);}
+  .results{background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:14px; margin-top:14px; display:flex; flex-wrap:wrap; gap:14px; font-size:1.05rem;}
+  .results .big{font-size:1.6rem; font-weight:700; color:var(--main);}
+  .mention{font-weight:700; padding:2px 10px; border-radius:999px;}
+  .mention.tb{background:#dcfce7; color:#166534;}
+  .mention.b{background:#dbeafe; color:#1e40af;}
+  .mention.ab{background:#fef9c3; color:#854d0e;}
+  .mention.p{background:#ffedd5; color:#9a3412;}
+  .mention.i{background:#fee2e2; color:#991b1b;}
+  .footer{text-align:center; color:#94a3b8; font-size:.75rem; margin-top:20px;}
+  .summary{padding:12px; border:1px solid var(--border); border-radius:10px; background:#f8fafc; margin-top:10px; font-size:.95rem; white-space:pre-line;}
+  @media print{
+    header, .no-print, .btn, .lang-btn{display:none !important;}
+    body{background:#fff; padding:0;}
+    .card{box-shadow:none; border:none; padding:6px;}
+    .summary{white-space:normal; font-size:.9rem;}
+    .container{max-width:100%;}
+    .results{background:#fff; border:1px solid #ccc;}
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1 id="appTitle">📄 Bulletin Scolaire Pro</h1>
+  <div>
+    <button class="lang-btn" id="langBtn" onclick="toggleLang()">العربية</button>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="card no-print">
+    <h2 id="secIdentity">🏫 Informations de l'élève</h2>
+    <div class="grid2">
+      <div><label id="lName">Nom & Prénom</label><input id="studentName" placeholder="Ex: Ahmed El Fassi"></div>
+      <div><label id="lClass">Classe</label><input id="studentClass" placeholder="Ex: 6ème année"></div>
+      <div><label id="lSchool">École</label><input id="schoolName" placeholder="Ex: École Al Fadl"></div>
+      <div><label id="lYear">Année scolaire</label><input id="schoolYear" placeholder="Ex: 2025/2026"></div>
+    </div>
+    <div style="margin-top:10px">
+      <div><label id="lTrim">Trimestre</label>
+        <select id="trimester">
+          <option>Trimestre 1</option><option>Trimestre 2</option><option>Trimestre 3</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 id="secGrades">📚 Matières et notes</h2>
+    <table>
+      <thead>
+        <tr>
+          <th id="thSubject">Matière</th>
+          <th id="thMax" style="width:80px">Barème</th>
+          <th id="thScore" style="width:80px">Note</th>
+          <th style="width:40px"></th>
+        </tr>
+      </thead>
+      <tbody id="gradeRows"></tbody>
+    </table>
+    <button class="btn secondary no-print" onclick="addRow()">➕ Ajouter une matière</button>
+    <div class="results" id="resultsBox" style="display:none">
+      <div><span id="lAvg" class="no-print">Moyenne :</span> <span class="big" id="avgValue"></span></div>
+      <div><span id="lMention">Mention :</span> <span class="mention" id="mentionValue"></span></div>
+    </div>
+  </div>
+
+  <div class="card no-print">
+    <h2 id="secActions">⚙️ Actions</h2>
+    <button class="btn" onclick="exportPdf()">🖨️ Exporter PDF / Imprimer</button>
+    <button class="btn secondary" onclick="saveData()">💾 Sauvegarder</button>
+    <button class="btn secondary" onclick="clearData()">🗑️ Réinitialiser</button>
+  </div>
+
+  <div class="card summary" id="summaryBox"></div>
+
+  <div class="footer">Bulletin Scolaire Pro — généré localement sur votre appareil.</div>
+</div>
+
+<script>
+const T = {
+  fr: {
+    title:"📄 Bulletin Scolaire Pro", secIdentity:"🏫 Informations de l'élève", secGrades:"📚 Matières et notes",
+    secActions:"⚙️ Actions", lName:"Nom & Prénom", lClass:"Classe", lSchool:"École", lYear:"Année scolaire", lTrim:"Trimestre",
+    thSubject:"Matière", thMax:"Barème", thScore:"Note", addBtn:"➕ Ajouter une matière",
+    lAvg:"Moyenne :", lMention:"Mention :", exportBtn:"🖨️ Exporter PDF / Imprimer", saveBtn:"💾 Sauvegarder", clearBtn:"🗑️ Réinitialiser",
+    placeholderName:"Ex: Ahmed El Fassi", placeholderClass:"Ex: 6ème année", placeholderSchool:"Ex: École Al Fadl", placeholderYear:"Ex: 2025/2026",
+    mention:"Mention :", sTrBien:"Très bien", sBien:"Bien", sAssez:"Assez bien", sPassable:"Passable", sInsuffisant:"Insuffisant",
+    subjDefault:"Matière", noData:"Renseignez au moins une matière pour calculer la moyenne.",
+    reportTitle:"Bulletin de notes", reportOf:"de l'élève", reportIn:"Classe", reportSchool:"École", reportYear:"Année scolaire", reportTrim:"Trimestre",
+    summary:"Bulletin", footer:"Signatures : Directeur | Enseignant | Parent"
+  },
+  ar: {
+    title:"📄 بطاقة النقط المدرسية", secIdentity:"🏫 معلومات التلميذ(ة)", secGrades:"📚 المواد والنقط",
+    secActions:"⚙️ إجراءات", lName:"الاسم الكامل", lClass:"القسم", lSchool:"المؤسسة", lYear:"السنة الدراسية", lTrim:"المرحلة",
+    thSubject:"المادة", thMax:"المعامل", thScore:"النقطة", addBtn:"➕ إضافة مادة",
+    lAvg:"المعدل :", lMention:"التقدير :", exportBtn:"🖨️ تصدير PDF / طباعة", saveBtn:"💾 حفظ", clearBtn:"🗑️ إعادة تعيين",
+    placeholderName:"مثال: أحمد الفاسي", placeholderClass:"مثال: السنة السادسة", placeholderSchool:"مثال: مؤسسة الفضل", placeholderYear:"مثال: 2025/2026",
+    mention:"التقدير :", sTrBien:"ممتاز", sBien:"جيد جدا", sAssez:"جيد", sPassable:"مقبول", sInsuffisant:"ضعيف",
+    subjDefault:"المادة", noData:"أدخل مادة واحدة على الأقل لحساب المعدل.",
+    reportTitle:"بطاقة النقط", reportOf:"التلميذ(ة)", reportIn:"القسم", reportSchool:"المؤسسة", reportYear:"السنة الدراسية", reportTrim:"المرحلة",
+    summary:"البطاقة", footer:"التواقيع : المدير | الأستاذ(ة) | ولي الأمر"
+  }
+};
+
+let lang = localStorage.getItem('bs_lang') || 'fr';
+let grades = [];
+
+function t(key){ return T[lang][key]; }
+
+function toggleLang(){
+  lang = lang === 'fr' ? 'ar' : 'fr';
+  document.body.classList.toggle('ar', lang === 'ar');
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  localStorage.setItem('bs_lang', lang);
+  applyTexts();
+}
+
+function applyTexts(){
+  document.getElementById('appTitle').textContent = t('title');
+  document.getElementById('secIdentity').textContent = t('secIdentity');
+  document.getElementById('secGrades').textContent = t('secGrades');
+  document.getElementById('secActions').textContent = t('secActions');
+  document.getElementById('lName').textContent = t('lName');
+  document.getElementById('lClass').textContent = t('lClass');
+  document.getElementById('lSchool').textContent = t('lSchool');
+  document.getElementById('lYear').textContent = t('lYear');
+  document.getElementById('lTrim').textContent = t('lTrim');
+  document.getElementById('thSubject').textContent = t('thSubject');
+  document.getElementById('thMax').textContent = t('thMax');
+  document.getElementById('thScore').textContent = t('thScore');
+  document.getElementById('lAvg').textContent = t('lAvg');
+  document.getElementById('lMention').textContent = t('lMention');
+  document.getElementById('langBtn').textContent = lang === 'fr' ? 'العربية' : 'Français';
+  document.getElementById('studentName').placeholder = t('placeholderName');
+  document.getElementById('studentClass').placeholder = t('placeholderClass');
+  document.getElementById('schoolName').placeholder = t('placeholderSchool');
+  document.getElementById('schoolYear').placeholder = t('placeholderYear');
+}
+
+function renderRows(){
+  const tb = document.getElementById('gradeRows');
+  tb.innerHTML = '';
+  grades.forEach((g, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input data-i="${i}" data-f="name" value="${esc(g.name || '')}" placeholder="${t('subjDefault')}"></td>
+      <td><input data-i="${i}" data-f="max" type="number" min="0" step="0.5" value="${g.max}"></td>
+      <td><input data-i="${i}" data-f="score" type="number" min="0" step="0.25" value="${g.score}"></td>
+      <td><button class="del" onclick="removeRow(${i})">✕</button></td>`;
+    tb.appendChild(tr);
+  });
+  document.querySelectorAll('#gradeRows input').forEach(inp => {
+    inp.addEventListener('input', function(){
+      const i = +this.dataset.i;
+      grades[i][this.dataset.f] = this.dataset.f === 'name' ? this.value : +this.value || 0;
+      if(this.dataset.f !== 'name'){ calc(); saveData(); }
+    });
+  });
+  calc();
+}
+
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function addRow(){
+  grades.push({name:'', max:10, score:0});
+  renderRows();
+}
+
+function removeRow(i){ grades.splice(i,1); renderRows(); }
+
+function calc(){
+  const valid = grades.filter(g => g.max > 0 && g.name.trim() !== '');
+  const box = document.getElementById('resultsBox');
+  if(valid.length === 0){ box.style.display='none'; renderSummary(null); return; }
+  const totalWeight = valid.reduce((s,g)=> s + g.max, 0);
+  const avg = valid.reduce((s,g)=> s + (g.score/g.max)*20*g.max, 0) / totalWeight;
+  const rounded = Math.round(avg*100)/100;
+  let mention = t('sInsuffisant'), cls='i';
+  if(rounded >= 18){ mention = t('sTrBien'); cls='tb'; }
+  else if(rounded >= 16){ mention = t('sTrBien'); cls='tb'; }
+  else if(rounded >= 14){ mention = t('sBien'); cls='b'; }
+  else if(rounded >= 12){ mention = t('sAssez'); cls='ab'; }
+  else if(rounded >= 10){ mention = t('sPassable'); cls='p'; }
+  box.style.display='flex';
+  document.getElementById('avgValue').textContent = rounded.toFixed(2) + ' / 20';
+  const m = document.getElementById('mentionValue');
+  m.textContent = mention;
+  m.className = 'mention ' + cls;
+  renderSummary(rounded);
+}
+
+function renderSummary(avg){
+  const box = document.getElementById('summaryBox');
+  if(avg === null){ box.innerHTML = `<b>${t('reportTitle')}</b><br>${t('noData')}`; return; }
+  const name = val('studentName'), cls = val('studentClass'), sch = val('schoolName'), yr = val('schoolYear');
+  const trim = document.getElementById('trimester').value;
+  const lines = grades.filter(g=>g.max>0 && g.name.trim()).map(g => `• ${g.name}: ${g.score} / ${g.max}`).join('\n');
+  box.innerHTML = `<b>${t('reportTitle')}</b> — ${t('reportOf')} ${esc(name)}
+${t('reportIn')}: ${esc(cls)} | ${t('reportSchool')}: ${esc(sch)} | ${t('reportYear')}: ${esc(yr)} | ${t('reportTrim')}: ${esc(trim)}
+─────────────────
+${lines}
+─────────────────
+<b>${t('lAvg')} ${avg.toFixed(2)} / 20</b>
+${t('footer')}`;
+}
+
+function val(id){ return document.getElementById(id).value.trim(); }
+
+function saveData(){
+  const data = {
+    studentName: val('studentName'), studentClass: val('studentClass'),
+    schoolName: val('schoolName'), schoolYear: val('schoolYear'), trimester: document.getElementById('trimester').value,
+    grades: grades
+  };
+  localStorage.setItem('bs_data', JSON.stringify(data));
+  alert(lang === 'fr' ? '✅ Données sauvegardées' : '✅ تم حفظ البيانات');
+}
+
+function clearData(){
+  if(!confirm(lang === 'fr' ? 'Effacer toutes les données ?' : 'هل تريد مسح كل البيانات؟')) return;
+  localStorage.removeItem('bs_data');
+  grades = [{name:'',max:10,score:0}];
+  document.getElementById('studentName').value='';
+  document.getElementById('studentClass').value='';
+  document.getElementById('schoolName').value='';
+  document.getElementById('schoolYear').value='';
+  document.getElementById('trimester').selectedIndex=0;
+  renderRows();
+}
+
+function exportPdf(){ window.print(); }
+
+document.getElementById('studentName').addEventListener('input', ()=>{ calc(); });
+document.getElementById('studentClass').addEventListener('input', ()=>{ calc(); });
+document.getElementById('schoolName').addEventListener('input', ()=>{ calc(); });
+document.getElementById('schoolYear').addEventListener('input', ()=>{ calc(); });
+document.getElementById('trimester').addEventListener('change', ()=>{ calc(); });
+
+try{
+  const saved = JSON.parse(localStorage.getItem('bs_data'));
+  if(saved){
+    if(saved.studentName) document.getElementById('studentName').value = saved.studentName;
+    if(saved.studentClass) document.getElementById('studentClass').value = saved.studentClass;
+    if(saved.schoolName) document.getElementById('schoolName').value = saved.schoolName;
+    if(saved.schoolYear) document.getElementById('schoolYear').value = saved.schoolYear;
+    if(saved.trimester) document.getElementById('trimester').value = saved.trimester;
+    if(saved.grades && saved.grades.length) grades = saved.grades;
+    else grades = [{name:'',max:10,score:0}];
+  } else {
+    grades = [{name:'',max:10,score:0}];
+  }
+}catch(e){ grades = [{name:'',max:10,score:0}]; }
+
+applyTexts();
+renderRows();
+</script>
+</body>
+</html>
