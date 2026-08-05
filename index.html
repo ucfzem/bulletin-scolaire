@@ -8,7 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   
   <style>
     /* ========== LIGHT MODE (par défaut) ========== */
@@ -631,6 +632,10 @@
     }
     body.pdf-mode .logo-text { display: none !important; }
     body.pdf-mode .report-card { box-shadow: none; border-top: none; }
+    body.pdf-mode th:last-child,
+    body.pdf-mode td:last-child {
+      display: none !important;
+    }
 
 
     /* ========== PRINT ========== */
@@ -813,6 +818,7 @@
 
   <script>
     let currentLang = 'fr';
+    try { const saved = localStorage.getItem('bulletin_lang'); if (saved === 'ar' || saved === 'fr') currentLang = saved; } catch(e) {}
     let savedLogoBase64 = '';
 
 
@@ -1043,7 +1049,11 @@
     }
 
 
-    function toggleLang() { currentLang = currentLang === 'fr' ? 'ar' : 'fr'; render(); }
+    function toggleLang() {
+      currentLang = currentLang === 'fr' ? 'ar' : 'fr';
+      try { localStorage.setItem('bulletin_lang', currentLang); } catch(e) {}
+      render();
+    }
 
 
     function TelechargerPDF() {
@@ -1056,37 +1066,71 @@
       const prevTheme = root.getAttribute('data-theme') || 'light';
       const prevWidth = card.style.width;
       const prevMaxWidth = card.style.maxWidth;
+      const prevPadding = card.style.padding;
       const wrapper = card.querySelector('.table-wrapper');
       const prevWOverflow = wrapper ? wrapper.style.overflow : '';
       const prevWBorder = wrapper ? wrapper.style.border : '';
-      root.setAttribute('data-theme', 'light');
-      document.body.classList.add('pdf-mode');
-      card.style.width = '210mm';
-      card.style.maxWidth = '210mm';
-      if (wrapper) {
-        wrapper.style.overflow = 'visible';
-        wrapper.style.border = 'none';
-      }
-      const captureWidth = Math.ceil(card.getBoundingClientRect().width);
-      const opt = {
-        margin: [8, 8, 8, 8],
-        filename: 'Bulletin_Scolaire.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff', windowWidth: captureWidth, scrollX: 0, scrollY: 0 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: ['css', 'legacy'] }
-      };
-      html2pdf().set(opt).from(card).save().then(() => {
+      const logoImg = document.getElementById('logo-img');
+      const prevLogoSrc = logoImg ? logoImg.src : '';
+      const BLANK_GIF = 'data:image/gif;base64,R0lGODlhAQABAAAAACw=';
+      if (logoImg && !logoImg.src) logoImg.src = BLANK_GIF;
+      const restore = () => {
         document.body.classList.remove('pdf-mode');
         root.setAttribute('data-theme', prevTheme);
         card.style.width = prevWidth;
         card.style.maxWidth = prevMaxWidth;
+        card.style.padding = prevPadding;
         if (wrapper) {
           wrapper.style.overflow = prevWOverflow;
           wrapper.style.border = prevWBorder;
         }
+        if (logoImg) logoImg.src = prevLogoSrc;
         btn.disabled = false;
         btn.style.opacity = '';
+      };
+      root.setAttribute('data-theme', 'light');
+      document.body.classList.add('pdf-mode');
+      card.style.width = '210mm';
+      card.style.maxWidth = '210mm';
+      card.style.padding = '14mm 12mm 10mm 12mm';
+      if (wrapper) {
+        wrapper.style.overflow = 'visible';
+        wrapper.style.border = 'none';
+      }
+      document.fonts.ready.then(() => {
+        return htmlToImage.toCanvas(card, {
+          scale: 2,
+          backgroundColor: '#ffffff',
+          pixelRatio: 2,
+          cacheBust: true,
+          skipFonts: true
+        });
+      }).then((canvas) => {
+        const pdf = new jspdf.jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+        const pageW = 210, pageH = 297;
+        const imgW = pageW, imgH = (canvas.height / canvas.width) * pageW;
+        if (imgH <= pageH) {
+          pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0, imgW, imgH);
+        } else {
+          const pages = Math.ceil(imgH / pageH);
+          const sliceH = Math.ceil(canvas.height / pages);
+          for (let i = 0; i < pages; i++) {
+            if (i > 0) pdf.addPage();
+            const slice = document.createElement('canvas');
+            slice.width = canvas.width;
+            slice.height = Math.min(sliceH, canvas.height - i * sliceH);
+            const ctx = slice.getContext('2d');
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, slice.width, slice.height);
+            ctx.drawImage(canvas, 0, i * sliceH, canvas.width, sliceH, 0, 0, canvas.width, slice.height);
+            pdf.addImage(slice.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0, imgW, (slice.height / canvas.width) * pageW);
+          }
+        }
+        pdf.save('Bulletin_Scolaire.pdf');
+        restore();
+      }).catch((err) => {
+        console.error('Erreur PDF:', err);
+        restore();
       });
     }
 
