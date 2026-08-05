@@ -592,7 +592,13 @@
     /* ========== CAPTURE PDF (classe temporaire) ========== */
     body.pdf-mode {
       overflow-x: visible !important;
+      font-family: 'Poppins', 'Tajawal', sans-serif !important;
     }
+    html[dir="rtl"] body.pdf-mode {
+      direction: rtl !important;
+      text-align: right !important;
+    }
+    html[dir="rtl"] body.pdf-mode .school-title { direction: rtl; text-align: center; }
     body.pdf-mode .table-wrapper {
       overflow: visible !important;
       border: none !important;
@@ -1014,6 +1020,10 @@
 
 
     function TelechargerPDF() {
+      const btn = document.getElementById('pdf-btn');
+      if (btn.disabled) return;
+      btn.disabled = true;
+      btn.style.opacity = '0.6';
       const root = document.documentElement;
       const card = document.querySelector('.report-card');
       const prevTheme = root.getAttribute('data-theme') || 'light';
@@ -1048,6 +1058,8 @@
           wrapper.style.overflow = prevWOverflow;
           wrapper.style.border = prevWBorder;
         }
+        btn.disabled = false;
+        btn.style.opacity = '';
       });
     }
 
