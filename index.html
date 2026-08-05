@@ -691,7 +691,7 @@
 
 
     <!-- FOOTER -->
-    <div class="footer-signature">Outil développé par UcfZem - Tanger</div>
+    <div class="footer-signature" id="footer-text">Outil développé par UcfZem - Tanger</div>
   </div>
 
 
@@ -709,6 +709,7 @@
         lblTotalCoef: "Total Coefficients", lblAverage: "Moyenne Générale", lblMention: "Mention",
         lblApprecTitle: "Appréciation globale :", lblObs: "Observations du professeur principal",
         lblSigParents: "Signature des parents", lblSigDirector: "Cachet & Signature du Directeur",
+        footer: "Outil développé par UcfZem - Tanger",
         periods: { p1: "Premier Semestre", p2: "Deuxième Semestre", p3: "Troisième Semestre" }
       },
       ar: {
@@ -719,6 +720,7 @@
         lblTotalCoef: "مجموع المعاملات", lblAverage: "المعدل العام", lblMention: "الميزة",
         lblApprecTitle: "التقدير العام :", lblObs: "ملاحظات الأستاذ الرئيسي",
         lblSigParents: "توقيع ولي الأمر", lblSigDirector: "خاتم وتوقيع المدير",
+        footer: "أداة مطورة من طرف UcfZem - طنجة",
         periods: { p1: "الدورة الأولى", p2: "الدورة الثانية", p3: "الدورة الثالثة" }
       }
     };
@@ -795,6 +797,7 @@
       document.getElementById('lbl-obs').innerText = t.lblObs;
       document.getElementById('lbl-sig-parents').innerText = t.lblSigParents;
       document.getElementById('lbl-sig-director').innerText = t.lblSigDirector;
+      document.getElementById('footer-text').innerText = t.footer;
 
 
       const select = document.getElementById('period-select');
