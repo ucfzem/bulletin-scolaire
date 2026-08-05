@@ -1,22 +1,61 @@
-<!DOCTYPE html><html lang="fr" dir="ltr">
+<!DOCTYPE html><html lang="fr" dir="ltr" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bulletin Scolaire Pro - UcfZem</title>
+  
+  <!-- Polices -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
   
   <style>
-    :root {
+    /* ========== LIGHT MODE (par défaut) ========== */
+    :root,
+    [data-theme="light"] {
+      --bg: #f4f6f9;
+      --card-bg: #ffffff;
       --navy: #1a2a3a;
+      --navy-light: #1e3448;
       --gold: #c5a059;
-      --light-bg: #f4f6f9;
+      --gold-light: #d4b36e;
       --border: #e2e8f0;
       --text: #334155;
+      --text-muted: #64748b;
+      --text-light: #94a3b8;
+      --input-bg: #ffffff;
+      --table-stripe: #f8fafc;
+      --shadow: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -2px rgba(0,0,0,0.06);
+      --danger: #e11d48;
+      --danger-hover: #be123c;
+      --logo-bg: #f8fafc;
+      --logo-border: #cbd5e1;
     }
 
 
+    /* ========== DARK MODE ========== */
+    [data-theme="dark"] {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --navy: #334155;
+      --navy-light: #475569;
+      --gold: #d4b36e;
+      --gold-light: #e2c78c;
+      --border: #334155;
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --text-light: #64748b;
+      --input-bg: #1e293b;
+      --table-stripe: #1a2332;
+      --shadow: 0 4px 6px -1px rgba(0,0,0,0.3), 0 2px 4px -2px rgba(0,0,0,0.2);
+      --danger: #f87171;
+      --danger-hover: #ef4444;
+      --logo-bg: #1e293b;
+      --logo-border: #475569;
+    }
+
+
+    /* ========== RESET ========== */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -25,260 +64,528 @@
     }
 
 
+    html {
+      font-size: 16px;
+    }
+
+
+    /* Grands écrans */
+    @media (min-width: 1400px) { html { font-size: 18px; } }
+    @media (min-width: 2000px) { html { font-size: 20px; } }
+    @media (min-width: 3000px) { html { font-size: 24px; } }
+
+
     body {
-      background-color: var(--light-bg);
+      background-color: var(--bg);
       color: var(--text);
-      padding: 20px;
+      padding: 1rem;
       display: flex;
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
 
+    /* ========== TOOLBAR ========== */
     .toolbar {
       width: 100%;
-      max-width: 850px;
+      max-width: 900px;
       display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
       flex-wrap: wrap;
+      align-items: center;
     }
 
 
     button {
       background-color: var(--navy);
-      color: white;
-      border: none;
-      padding: 10px 16px;
-      border-radius: 6px;
+      color: #ffffff;
+      border: 2px solid transparent;
+      padding: 0.6rem 1rem;
+      border-radius: 0.5rem;
       cursor: pointer;
-      font-weight: 500;
-      transition: opacity 0.2s;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      outline: none;
     }
 
 
-    button:hover { opacity: 0.9; }
-    button.secondary { background-color: var(--gold); }
-    button.danger { background-color: #e11d48; }
+    button:focus-visible {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.3);
+    }
 
 
+    button:hover { opacity: 0.9; transform: translateY(-1px); }
+    button:active { transform: translateY(0); }
+
+
+    button.secondary { background-color: var(--gold); color: #1a2a3a; }
+    button.danger { background-color: var(--danger); }
+    button.danger:hover { background-color: var(--danger-hover); }
+
+
+    .theme-toggle {
+      background-color: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 1.2rem;
+      padding: 0.4rem 0.6rem;
+      border-radius: 50%;
+      width: 2.5rem;
+      height: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+
+    .theme-toggle:hover { background-color: var(--border); }
+
+
+    /* ========== REPORT CARD ========== */
     .report-card {
-      background: white;
+      background: var(--card-bg);
       width: 100%;
-      max-width: 850px;
-      padding: 40px;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+      max-width: 900px;
+      padding: 2.5rem;
+      border-radius: 0.75rem;
+      box-shadow: var(--shadow);
       border-top: 6px solid var(--navy);
+      transition: background-color 0.3s ease;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
 
 
+    @media (min-width: 1400px) { .report-card { max-width: 1100px; padding: 3rem; } }
+    @media (min-width: 2000px) { .report-card { max-width: 1400px; padding: 4rem; } }
+
+
+    /* ========== HEADER ========== */
     .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       border-bottom: 2px solid var(--border);
-      padding-bottom: 20px;
-      margin-bottom: 25px;
+      padding-bottom: 1.25rem;
+      margin-bottom: 1.5rem;
+      gap: 1rem;
+      flex-wrap: wrap;
     }
 
 
     .logo-container {
-      width: 90px;
-      height: 90px;
-      border: 2px dashed var(--border);
-      border-radius: 8px;
+      width: 100px;
+      height: 100px;
+      min-width: 100px;
+      border: 2px dashed var(--logo-border);
+      border-radius: 0.5rem;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       overflow: hidden;
-      background-color: #f8fafc;
-      color: #94a3b8;
+      background-color: var(--logo-bg);
+      color: var(--text-light);
+      transition: all 0.2s ease;
+      position: relative;
     }
 
 
-    .logo-container svg { width: 32px; height: 32px; fill: currentColor; }
-    .logo-container img { width: 100%; height: 100%; object-fit: contain; }
+    .logo-container:hover, .logo-container:focus-visible {
+      border-color: var(--gold);
+      background-color: var(--card-bg);
+      outline: none;
+    }
 
 
-    .school-info { text-align: right; }
+    .logo-container svg {
+      width: 36px;
+      height: 36px;
+      fill: currentColor;
+      flex-shrink: 0;
+    }
+
+
+    .logo-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+
+    .logo-text {
+      font-size: 0.65rem;
+      margin-top: 4px;
+      text-align: center;
+    }
+
+
+    #logo-input { display: none; }
+
+
+    .school-info {
+      text-align: right;
+      flex: 1;
+      min-width: 200px;
+    }
     html[dir="rtl"] .school-info { text-align: left; }
 
 
-    .school-info input, .school-info select {
+    .school-info input,
+    .school-info select {
       font-size: 1.1rem;
       font-weight: 700;
-      color: var(--navy);
+      color: var(--text);
       border: none;
-      border-bottom: 1px dashed rgba(197,160,89,0.6);
+      border-bottom: 1px dashed var(--gold);
       background: transparent;
-      cursor: text;
+      padding: 0.2rem 0;
+      max-width: 100%;
     }
-    .school-info input:hover, .school-info select:hover { border-bottom-color: var(--gold); }
-    .school-info input:focus, .school-info select:focus { border-bottom-color: var(--gold); outline: none; }
+
+
+    .school-info input:focus,
+    .school-info select:focus {
+      border-bottom-color: var(--gold);
+      outline: none;
+    }
 
 
     .meta-row {
       display: flex;
-      gap: 10px;
+      gap: 0.5rem;
       justify-content: flex-end;
       align-items: center;
-      margin-top: 5px;
+      margin-top: 0.5rem;
+      flex-wrap: wrap;
     }
     html[dir="rtl"] .meta-row { justify-content: flex-start; }
-    .meta-row input, .meta-row select { font-size: 0.85rem !important; color: #64748b !important; font-weight: 500 !important; }
 
 
-    .student-info {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px;
-      margin-bottom: 25px;
-      background-color: #f8fafc;
-      padding: 15px;
-      border-radius: 6px;
+    .meta-row input,
+    .meta-row select {
+      font-size: 0.85rem !important;
+      color: var(--text-muted) !important;
+      font-weight: 500 !important;
     }
 
 
-    .field { display: flex; flex-direction: column; }
-    .field label { font-size: 0.8rem; text-transform: uppercase; color: #64748b; margin-bottom: 4px; font-weight: 600; }
-    .field input { padding: 6px 10px; border: 1px solid var(--border); border-radius: 4px; }
+    /* ========== STUDENT INFO ========== */
+    .student-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      background-color: var(--table-stripe);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--border);
+    }
 
 
-    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-    th, td { border: 1px solid var(--border); padding: 10px; text-align: center; }
-    th { background-color: var(--navy); color: white; font-weight: 600; }
-    td input { width: 100%; text-align: center; border: 1px solid transparent; padding: 4px; }
-    td input:focus { border-color: var(--gold); outline: none; }
+    .field {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+
+    .field label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+
+    .field input {
+      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      font-size: 0.9rem;
+      background-color: var(--input-bg);
+      color: var(--text);
+      max-width: 100%;
+    }
+
+
+    .field input:focus {
+      border-color: var(--gold);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.15);
+    }
+
+
+    /* ========== TABLE ========== */
+    .table-wrapper {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin-bottom: 1.25rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--border);
+    }
+
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 600px;
+    }
+
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 0.75rem 0.5rem;
+      text-align: center;
+    }
+
+
+    th {
+      background-color: var(--navy);
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+
+    td input {
+      width: 100%;
+      text-align: center;
+      border: 1px solid transparent;
+      padding: 0.25rem;
+      font-size: 0.9rem;
+      background: transparent;
+      color: var(--text);
+    }
+
+
+    td input:focus {
+      border-color: var(--gold);
+      outline: none;
+      background-color: var(--input-bg);
+    }
+
+
     .subject-name { text-align: start; font-weight: 500; }
 
 
+    /* ========== SUMMARY ========== */
     .summary-box {
       display: flex;
       justify-content: space-between;
       align-items: center;
       background-color: var(--navy);
-      color: white;
-      padding: 15px 20px;
-      border-radius: 6px;
-      margin-top: 20px;
+      color: #ffffff;
+      padding: 1rem 1.5rem;
+      border-radius: 0.5rem;
+      margin-top: 1.25rem;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
 
 
-    .summary-item { display: flex; flex-direction: column; }
-    .summary-item span:first-child { font-size: 0.8rem; opacity: 0.8; }
-    .summary-item span:last-child { font-size: 1.3rem; font-weight: 700; color: var(--gold); }
+    .summary-item {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
 
 
+    .summary-item span:first-child {
+      font-size: 0.75rem;
+      opacity: 0.85;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+
+    .summary-item span:last-child {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--gold-light);
+    }
+
+
+    /* ========== APPRECIATION ========== */
     .auto-appreciation {
-      margin-top: 15px;
-      padding: 10px 15px;
-      background-color: #f1f5f9;
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      background-color: var(--table-stripe);
       border-left: 4px solid var(--gold);
-      border-radius: 4px;
+      border-radius: 0.375rem;
       font-size: 0.9rem;
       font-weight: 500;
-      color: var(--navy);
+      color: var(--text);
     }
-    html[dir="rtl"] .auto-appreciation { border-left: none; border-right: 4px solid var(--gold); }
+    html[dir="rtl"] .auto-appreciation {
+      border-left: none;
+      border-right: 4px solid var(--gold);
+    }
 
 
-    .obs-section { margin-top: 20px; display: flex; flex-direction: column; }
-    .obs-section label { font-size: 0.85rem; font-weight: 600; color: var(--navy); margin-bottom: 5px; }
-    .obs-section textarea { width: 100%; height: 70px; padding: 10px; border: 1px solid var(--border); border-radius: 6px; resize: vertical; font-size: 0.9rem; }
+    /* ========== OBSERVATIONS ========== */
+    .obs-section {
+      margin-top: 1.25rem;
+      display: flex;
+      flex-direction: column;
+    }
 
 
+    .obs-section label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+
+
+    .obs-section textarea {
+      width: 100%;
+      height: 70px;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      resize: vertical;
+      font-size: 0.9rem;
+      background-color: var(--input-bg);
+      color: var(--text);
+    }
+
+
+    .obs-section textarea:focus {
+      border-color: var(--gold);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.15);
+    }
+
+
+    /* ========== SIGNATURES ========== */
     .signatures-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-top: 35px;
+      gap: 1.25rem;
+      margin-top: 2rem;
       text-align: center;
+    }
+
+
+    @media (max-width: 500px) {
+      .signatures-grid { grid-template-columns: 1fr; }
     }
 
 
     .signature-box {
       border: 1px dashed var(--border);
-      padding: 15px;
-      border-radius: 6px;
+      padding: 1rem;
+      border-radius: 0.5rem;
       min-height: 90px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      background-color: var(--table-stripe);
     }
-    .signature-box span { font-size: 0.85rem; font-weight: 600; color: var(--navy); }
 
 
+    .signature-box span {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+
+    /* ========== FOOTER ========== */
     .footer-signature {
-      margin-top: 30px;
+      margin-top: 2rem;
       text-align: center;
       font-size: 0.8rem;
-      color: #94a3b8;
+      color: var(--text-muted);
       border-top: 1px solid var(--border);
-      padding-top: 15px;
+      padding-top: 1rem;
     }
 
 
-    .table-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-
-    @media screen and (max-width: 640px) {
-      body { padding: 12px; }
-      .report-card { padding: 16px; }
-      .toolbar { display: grid; grid-template-columns: 1fr 1fr; }
-      .toolbar button { width: 100%; font-size: 0.8rem; padding: 10px 8px; }
-      .toolbar button:last-child { grid-column: span 2; }
-      .header { flex-wrap: wrap; gap: 12px; }
-      .logo-container { width: 64px; height: 64px; }
-      .logo-container svg { width: 24px; height: 24px; }
-      .school-info { flex: 1; min-width: 0; }
-      #school-name { width: 100%; font-size: 1rem; }
-      .meta-row { flex-wrap: wrap; }
-      .table-wrap table { min-width: 440px; }
-      th, td { padding: 8px 6px; font-size: 0.8rem; }
-      .summary-box { flex-wrap: wrap; gap: 12px; }
-      .summary-item { flex: 1; min-width: 90px; }
-      .summary-item span:last-child { font-size: 1.1rem; }
-      .signatures-grid { grid-template-columns: 1fr; }
-    }
-
+    /* ========== PRINT ========== */
     @media print {
-      body { background: white; padding: 0; }
-      .toolbar, .btn-action, th:last-child, td:last-child { display: none !important; }
-      .report-card { box-shadow: none; border-top: none; padding: 0; width: 100%; }
-      input, select, textarea { border: none !important; background: transparent !important; appearance: none; }
+      body {
+        background: #ffffff !important;
+        padding: 0;
+        color: #000000;
+      }
+      .toolbar, .btn-action, th:last-child, td:last-child,
+      .theme-toggle, #logo-input {
+        display: none !important;
+      }
+      .logo-container {
+        border: none !important;
+        background: transparent !important;
+      }
+      .logo-text { display: none !important; }
+      .report-card {
+        box-shadow: none;
+        border-top: none;
+        padding: 0;
+        width: 100%;
+        max-width: 100%;
+      }
+      input, select, textarea {
+        border: none !important;
+        background: transparent !important;
+        color: #000000 !important;
+        appearance: none;
+      }
       .signature-box { border: 1px solid #cbd5e1; }
+      .summary-box { background-color: #1a2a3a !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      th { background-color: #1a2a3a !important; color: #ffffff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .auto-appreciation { background: #f8fafc !important; }
+      .student-info { background: #f8fafc !important; border: 1px solid #e2e8f0 !important; }
     }
   </style>
 </head>
 <body>
 
 
+  <!-- TOOLBAR -->
   <div class="toolbar">
     <button onclick="toggleLang()" class="secondary" id="lang-btn">العربية</button>
     <button onclick="addSubject()" class="btn-action" id="add-btn">+ Ajouter Matière</button>
     <button onclick="fillDemo()" class="btn-action" id="demo-btn">Remplir Démo</button>
     <button onclick="resetForm()" class="danger btn-action" id="reset-btn">Réinitialiser</button>
     <button onclick="window.print()" class="btn-action" id="print-btn">Imprimer / PDF</button>
+    <button onclick="toggleTheme()" class="theme-toggle" id="theme-btn" aria-label="Changer le thème">🌓</button>
   </div>
 
 
+  <!-- REPORT CARD -->
   <div class="report-card">
+    
+    <!-- HEADER -->
     <div class="header">
-      <div class="logo-container" onclick="document.getElementById('logo-input').click()">
-        <div id="logo-placeholder" style="text-align:center;">
+      <div class="logo-container" onclick="document.getElementById('logo-input').click()" onkeydown="if(event.key==='Enter'||event.key===' ') document.getElementById('logo-input').click()" tabindex="0" role="button" aria-label="Ajouter un logo">
+        <div id="logo-placeholder">
           <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6l9-4.91V17h2V9L12 3z M5 13.18v4L12 21l7-3.82v-4L12 17L5 13.18z"/></svg>
-          <div style="font-size:0.65rem; margin-top:4px;">+ Logo</div>
+          <div class="logo-text">+ Logo</div>
         </div>
-        <img id="logo-img" style="display:none;" />
-        <input type="file" id="logo-input" accept="image/*" style="display:none" onchange="loadLogo(event)">
+        <img id="logo-img" style="display:none;" alt="Logo de l'école" />
+        <input type="file" id="logo-input" accept="image/*" onchange="loadLogo(event)">
       </div>
 
 
       <div class="school-info">
-        <input type="text" id="school-name" value="École Excellence" oninput="saveData()">
+        <input type="text" id="school-name" value="École Excellence" oninput="saveData()" maxlength="100">
         <div class="meta-row">
           <select id="period-select" onchange="saveData()">
             <option value="p1">Premier Semestre</option>
@@ -286,36 +593,38 @@
             <option value="p3">Troisième Semestre</option>
           </select>
           <span>|</span>
-          <input type="text" id="school-year" value="2025-2026" style="width: 90px;" oninput="saveData()">
+          <input type="text" id="school-year" value="2025-2026" style="width: 6rem;" oninput="saveData()" maxlength="9">
         </div>
       </div>
     </div>
 
 
+    <!-- STUDENT INFO -->
     <div class="student-info">
       <div class="field">
         <label id="lbl-name">Nom & Prénom</label>
-        <input type="text" id="student-name" placeholder="Ex: Yassine Mansouri" oninput="saveData()">
+        <input type="text" id="student-name" placeholder="Ex: Yassine Mansouri" oninput="saveData()" maxlength="80">
       </div>
       <div class="field">
         <label id="lbl-class">Classe</label>
-        <input type="text" id="student-class" placeholder="Ex: 3ème Année" oninput="saveData()">
+        <input type="text" id="student-class" placeholder="Ex: 3ème Année" oninput="saveData()" maxlength="50">
       </div>
       <div class="field">
         <label id="lbl-id">Matricule</label>
-        <input type="text" id="student-id" placeholder="Ex: 2026-88" oninput="saveData()">
+        <input type="text" id="student-id" placeholder="Ex: 2026-88" oninput="saveData()" maxlength="20">
       </div>
     </div>
 
 
-    <div class="table-wrap">
+    <!-- TABLE -->
+    <div class="table-wrapper">
       <table>
         <thead>
           <tr>
             <th id="th-subject">Matière</th>
-            <th id="th-note" style="width: 120px;">Note (/20)</th>
-            <th id="th-coef" style="width: 100px;">Coef</th>
-            <th id="th-total" style="width: 120px;">Total</th>
+            <th id="th-note" style="width: 100px;">Note (/20)</th>
+            <th id="th-coef" style="width: 80px;">Coef</th>
+            <th id="th-total" style="width: 100px;">Total</th>
             <th class="btn-action" style="width: 50px;">Action</th>
           </tr>
         </thead>
@@ -324,6 +633,7 @@
     </div>
 
 
+    <!-- SUMMARY -->
     <div class="summary-box">
       <div class="summary-item">
         <span id="lbl-total-coef">Total Coefficients</span>
@@ -340,29 +650,34 @@
     </div>
 
 
+    <!-- APPRECIATION -->
     <div class="auto-appreciation" id="auto-appreciation-box">
       <span id="lbl-apprec-title">Appréciation globale :</span> <span id="res-appreciation">--</span>
     </div>
 
 
+    <!-- OBSERVATIONS -->
     <div class="obs-section">
       <label id="lbl-obs">Observations du professeur principal</label>
-      <textarea id="obs-text" placeholder="Remarques et conseils..." oninput="saveData()"></textarea>
+      <textarea id="obs-text" placeholder="Remarques et conseils..." oninput="saveData()" maxlength="500"></textarea>
     </div>
 
 
+    <!-- SIGNATURES -->
     <div class="signatures-grid">
       <div class="signature-box"><span id="lbl-sig-parents">Signature des parents</span></div>
       <div class="signature-box"><span id="lbl-sig-director">Cachet & Signature du Directeur</span></div>
     </div>
 
 
+    <!-- FOOTER -->
     <div class="footer-signature">Outil développé par UcfZem - Tanger</div>
   </div>
 
 
   <script>
     let currentLang = 'fr';
+    let savedLogoBase64 = '';
 
 
     const translations = {
@@ -405,17 +720,32 @@
 
 
     function init() {
+      const savedTheme = localStorage.getItem('bulletin_theme');
+      if (savedTheme) {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+      }
+
+
       const saved = localStorage.getItem('bulletin_data');
       if (saved) {
-        const parsed = JSON.parse(saved);
-        subjectsData = parsed.subjects || subjectsData;
-        document.getElementById('student-name').value = parsed.name || '';
-        document.getElementById('student-class').value = parsed.class || '';
-        document.getElementById('student-id').value = parsed.id || '';
-        document.getElementById('school-name').value = parsed.schoolName || 'École Excellence';
-        document.getElementById('school-year').value = parsed.schoolYear || '2025-2026';
-        document.getElementById('period-select').value = parsed.period || 'p1';
-        document.getElementById('obs-text').value = parsed.obs || '';
+        try {
+          const parsed = JSON.parse(saved);
+          subjectsData = parsed.subjects || subjectsData;
+          document.getElementById('student-name').value = parsed.name || '';
+          document.getElementById('student-class').value = parsed.class || '';
+          document.getElementById('student-id').value = parsed.id || '';
+          document.getElementById('school-name').value = parsed.schoolName || 'École Excellence';
+          document.getElementById('school-year').value = parsed.schoolYear || '2025-2026';
+          document.getElementById('period-select').value = parsed.period || 'p1';
+          document.getElementById('obs-text').value = parsed.obs || '';
+          
+          if (parsed.logo) {
+            savedLogoBase64 = parsed.logo;
+            displayLogo(savedLogoBase64);
+          }
+        } catch (e) {
+          console.error("Erreur de lecture du localStorage", e);
+        }
       }
       render();
     }
@@ -467,11 +797,11 @@
 
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td><input type="text" class="subject-name" value="${name}" oninput="updateSubjectName(${idx}, this.value)"></td>
+          <td><input type="text" class="subject-name" value="${name}" oninput="updateSubjectName(${idx}, this.value)" maxlength="60"></td>
           <td><input type="number" min="0" max="20" step="0.25" value="${item.note}" oninput="updateNote(${idx}, this.value)"></td>
-          <td><input type="number" min="1" value="${item.coef}" oninput="updateCoef(${idx}, this.value)"></td>
+          <td><input type="number" min="1" max="10" value="${item.coef}" oninput="updateCoef(${idx}, this.value)"></td>
           <td>${total}</td>
-          <td class="btn-action"><button class="danger" style="padding:2px 8px;" onclick="removeSubject(${idx})">×</button></td>
+          <td class="btn-action"><button class="danger" style="padding:0.25rem 0.5rem; font-size:0.8rem;" onclick="removeSubject(${idx})" aria-label="Supprimer">×</button></td>
         `;
         tbody.appendChild(tr);
       });
@@ -482,8 +812,13 @@
 
 
     function updateSubjectName(idx, val) {
-      if (currentLang === 'ar') subjectsData[idx].name_ar = val;
-      else subjectsData[idx].name_fr = val;
+      if (currentLang === 'ar') {
+        subjectsData[idx].name_ar = val;
+        if (!subjectsData[idx].name_fr) subjectsData[idx].name_fr = val;
+      } else {
+        subjectsData[idx].name_fr = val;
+        if (!subjectsData[idx].name_ar) subjectsData[idx].name_ar = val;
+      }
       saveData();
     }
 
@@ -528,9 +863,11 @@
     function renderCalculationsOnly() {
       const rows = document.querySelectorAll('#subjects-body tr');
       subjectsData.forEach((item, idx) => {
-        const totalCell = rows[idx].children[3];
-        const total = (item.note !== "" && !isNaN(item.note)) ? (parseFloat(item.note) * parseFloat(item.coef)).toFixed(2) : "-";
-        totalCell.innerText = total;
+        if (rows[idx]) {
+          const totalCell = rows[idx].children[3];
+          const total = (item.note !== "" && !isNaN(item.note)) ? (parseFloat(item.note) * parseFloat(item.coef)).toFixed(2) : "-";
+          totalCell.innerText = total;
+        }
       });
       calculate();
     }
@@ -548,13 +885,21 @@
     function getAppreciation(avg) {
       if (avg >= 16) return currentLang === 'ar' ? 'عمل ممتاز، تهانينا!' : 'Excellents résultats, félicitations !';
       if (avg >= 14) return currentLang === 'ar' ? 'عمل جيد جداً، واصل الإجتهاد.' : 'Très bon travail, continuez ainsi.';
-      if (avg >= 12) return currentLang === 'ar' ? 'عمل جيد، يمكنك تحقيق الأفضل.' : 'Bon travail dans ensemble, peut mieux faire.';
+      if (avg >= 12) return currentLang === 'ar' ? 'عمل جيد، يمكنك تحقيق الأفضل.' : 'Bon travail dans l\'ensemble, peut mieux faire.';
       if (avg >= 10) return currentLang === 'ar' ? 'نتائج مقبولة، يجب بذل المزيد من الجهد.' : 'Résultats passables, des efforts sont requis.';
       return currentLang === 'ar' ? 'نتائج غير كافية، يجب العمل بجدية أكبر.' : 'Résultats insuffisants, un redressement s\'impose.';
     }
 
 
     function toggleLang() { currentLang = currentLang === 'fr' ? 'ar' : 'fr'; render(); }
+
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('bulletin_theme', next);
+    }
 
 
     function fillDemo() {
@@ -581,9 +926,21 @@
       document.getElementById('student-class').value = "";
       document.getElementById('student-id').value = "";
       document.getElementById('obs-text').value = "";
+      savedLogoBase64 = '';
+      document.getElementById('logo-img').style.display = 'none';
+      document.getElementById('logo-img').src = '';
+      document.getElementById('logo-placeholder').style.display = 'flex';
       subjectsData = getDefaultSubjects();
       localStorage.removeItem('bulletin_data');
       render();
+    }
+
+
+    function displayLogo(src) {
+      const img = document.getElementById('logo-img');
+      img.src = src;
+      img.style.display = 'block';
+      document.getElementById('logo-placeholder').style.display = 'none';
     }
 
 
@@ -592,9 +949,9 @@
       if (file) {
         const reader = new FileReader();
         reader.onload = function(evt) {
-          document.getElementById('logo-img').src = evt.target.result;
-          document.getElementById('logo-img').style.display = 'block';
-          document.getElementById('logo-placeholder').style.display = 'none';
+          savedLogoBase64 = evt.target.result;
+          displayLogo(savedLogoBase64);
+          saveData();
         }
         reader.readAsDataURL(file);
       }
@@ -610,6 +967,7 @@
         schoolYear: document.getElementById('school-year').value,
         period: document.getElementById('period-select').value,
         obs: document.getElementById('obs-text').value,
+        logo: savedLogoBase64,
         subjects: subjectsData
       };
       localStorage.setItem('bulletin_data', JSON.stringify(data));
