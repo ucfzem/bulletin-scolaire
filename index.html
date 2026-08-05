@@ -365,6 +365,18 @@
     }
 
 
+    @media screen and (max-width: 640px) {
+      table { min-width: 0; }
+      th, td { padding: 0.5rem 0.3rem; font-size: 0.75rem; }
+      th:nth-child(2), td:nth-child(2) { width: 48px !important; }
+      th:nth-child(3), td:nth-child(3) { width: 40px !important; }
+      th:nth-child(4), td:nth-child(4) { width: 52px !important; }
+      th:nth-child(5), td:nth-child(5) { width: 30px !important; }
+      td input { font-size: 0.75rem; padding: 0.15rem; }
+      td:first-child input { white-space: normal; }
+    }
+
+
     th, td {
       border: 1px solid var(--border);
       padding: 0.75rem 0.5rem;
@@ -1018,11 +1030,12 @@
         wrapper.style.overflow = 'visible';
         wrapper.style.border = 'none';
       }
+      const captureWidth = Math.ceil(card.getBoundingClientRect().width);
       const opt = {
         margin: [8, 8, 8, 8],
         filename: 'Bulletin_Scolaire.pdf',
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+        html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff', windowWidth: captureWidth, scrollX: 0, scrollY: 0 },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
         pagebreak: { mode: ['css', 'legacy'] }
       };
